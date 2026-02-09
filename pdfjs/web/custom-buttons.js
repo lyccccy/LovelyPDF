@@ -10,8 +10,22 @@
   // 默认状态
   const DEFAULT_STATE = {
     active: false,
-    type: 'invert' // 'invert' (高对比/反色) or 'dim' (护眼/变暗)
+    type: 'invert', // 'invert' | 'dim' | 'custom'
+    settings: {
+      brightness: 100, // %
+      contrast: 100, // %
+      invert: 0, // %
+      hue: 0 // deg
+    }
   };
+
+  // 预设配置
+  const PRESETS = {
+    invert: { invert: 80, brightness: 90, contrast: 90, hue: 180 },
+    dim: { invert: 0, brightness: 80, contrast: 90, hue: 0 }
+  };
+
+  let currentState = JSON.parse(JSON.stringify(DEFAULT_STATE));
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initNightMode);
@@ -24,7 +38,10 @@
     const button = document.getElementById('customNightModeButton');
     if (!button) return;
 
-    // 1. 注入菜单 HTML
+    // 1. 注入菜单 HTML (注入到按钮的父容器中，而不是按钮内部)
+    const wrapper = button.parentElement;
+    wrapper.style.position = 'relative'; // 确保菜单绝对定位相对于此容器
+
     const menuHTML = `
       <div id="nightModeMenu" class="night-mode-menu hidden">
         <div class="menu-item" data-type="invert">
@@ -37,34 +54,81 @@
           <span class="menu-text">护眼模式</span>
           <span class="menu-check" id="check-dim">✓</span>
         </div>
+        <div class="menu-separator"></div>
+        <div class="menu-item" id="openSettings">
+          <span class="menu-icon">⚙️</span>
+          <span class="menu-text">自定义设置...</span>
+        </div>
       </div>
     `;
-    button.insertAdjacentHTML('beforeend', menuHTML);
+    wrapper.insertAdjacentHTML('beforeend', menuHTML);
 
-    // 2. 绑定事件
+    // 2. 注入设置面板 HTML
+    const settingsHTML = `
+      <div id="nightModeSettings" class="night-mode-settings hidden">
+        <div class="settings-header">
+          <h3>夜间模式设置</h3>
+          <button id="closeSettings" class="close-btn">×</button>
+        </div>
+        <div class="settings-body">
+          <div class="setting-row">
+            <label>反色 (Invert)</label>
+            <input type="range" id="slider-invert" min="0" max="100" value="0">
+            <span class="value" id="val-invert">0%</span>
+          </div>
+          <div class="setting-row">
+            <label>亮度 (Brightness)</label>
+            <input type="range" id="slider-brightness" min="50" max="150" value="100">
+            <span class="value" id="val-brightness">100%</span>
+          </div>
+          <div class="setting-row">
+            <label>对比度 (Contrast)</label>
+            <input type="range" id="slider-contrast" min="50" max="150" value="100">
+            <span class="value" id="val-contrast">100%</span>
+          </div>
+          <div class="setting-row">
+            <label>色相 (Hue)</label>
+            <input type="range" id="slider-hue" min="0" max="360" value="0">
+            <span class="value" id="val-hue">0°</span>
+          </div>
+        </div>
+        <div class="settings-footer">
+          <button id="resetSettings" class="reset-btn">重置</button>
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', settingsHTML);
+
+    // 3. 绑定事件 (绑定到 wrapper 而不是 button)
+    bindEvents(button, wrapper);
+
+    // 4. 加载状态
+    loadNightModeState();
+  }
+
+  function bindEvents(button, wrapper) {
     const menu = document.getElementById('nightModeMenu');
 
     // 按钮点击：切换开关
     button.addEventListener('click', (e) => {
-      // 如果点击的是菜单项，由菜单项逻辑处理
-      if (e.target.closest('.menu-item')) return;
       toggleNightMode();
     });
 
-    // 鼠标悬停显示菜单
+    // 鼠标悬停显示菜单 (绑定在 wrapper 上，这样鼠标从按钮移到菜单时不会触发mouseleave)
     let timeoutId;
-    button.addEventListener('mouseenter', () => {
+
+    wrapper.addEventListener('mouseenter', () => {
       clearTimeout(timeoutId);
       menu.classList.remove('hidden');
     });
 
-    button.addEventListener('mouseleave', () => {
+    wrapper.addEventListener('mouseleave', () => {
       timeoutId = setTimeout(() => {
         menu.classList.add('hidden');
       }, 300);
     });
 
-    // 菜单保持显示
+    // 菜单保持显示 (其实 wrapper 包含了菜单，这一步是双重保险)
     menu.addEventListener('mouseenter', () => {
       clearTimeout(timeoutId);
       menu.classList.remove('hidden');
@@ -77,87 +141,180 @@
     });
 
     // 菜单项点击
-    const items = menu.querySelectorAll('.menu-item');
+    const items = menu.querySelectorAll('.menu-item[data-type]');
     items.forEach(item => {
       item.addEventListener('click', (e) => {
-        e.stopPropagation(); // 阻止冒泡触发按钮点击
+        e.stopPropagation();
         const type = item.dataset.type;
         setNightModeType(type);
       });
     });
 
-    // 3. 加载状态
-    loadNightModeState();
-  }
+    // 设置按钮点击
+    document.getElementById('openSettings').addEventListener('click', (e) => {
+      e.stopPropagation();
+      openSettings();
+      menu.classList.add('hidden');
+    });
 
-  function toggleNightMode() {
-    chrome.storage.local.get(['nightModeState'], (result) => {
-      const state = result.nightModeState || DEFAULT_STATE;
-      const newState = { ...state, active: !state.active };
-      applyState(newState);
-      saveState(newState);
-      showNotification(newState.active ? '🌙 已开启' + getModeName(newState.type) : '☀️ 已关闭夜间模式');
+    // 设置面板关闭
+    document.getElementById('closeSettings').addEventListener('click', closeSettings);
+
+    // 重置按钮
+    document.getElementById('resetSettings').addEventListener('click', () => {
+      if (currentState.type === 'custom') {
+        // 如果是自定义模式，重置回默认 invert 预设
+        setNightModeType('invert');
+      } else {
+        // 否则重置当前预设的值（虽然预设值是固定的，但UI需要同步）
+        setNightModeType(currentState.type);
+      }
+      updateSliders();
+    });
+
+    // 滑块事件
+    ['invert', 'brightness', 'contrast', 'hue'].forEach(key => {
+      const slider = document.getElementById(`slider-${key}`);
+      slider.addEventListener('input', (e) => {
+        const value = parseInt(e.target.value);
+        updateSetting(key, value);
+      });
     });
   }
 
-  function setNightModeType(type) {
-    const newState = { active: true, type: type };
-    applyState(newState);
-    saveState(newState);
-    showNotification('已切换至 ' + getModeName(type));
-    // 关闭菜单
-    document.getElementById('nightModeMenu').classList.add('hidden');
+  function toggleNightMode() {
+    currentState.active = !currentState.active;
+    applyState();
+    saveState();
+    showNotification(currentState.active ? '🌙 已开启' + getModeName(currentState.type) : '☀️ 已关闭夜间模式');
   }
 
-  function applyState(state) {
+  function setNightModeType(type) {
+    currentState.active = true;
+    currentState.type = type;
+
+    if (PRESETS[type]) {
+      currentState.settings = { ...PRESETS[type] };
+    }
+
+    applyState();
+    saveState();
+    updateSliders();
+    showNotification('已切换至 ' + getModeName(type));
+  }
+
+  function updateSetting(key, value) {
+    // 一旦手动调整，切换到自定义模式
+    if (currentState.type !== 'custom') {
+      currentState.type = 'custom';
+      // 更新UI显示 custom 被选中
+      document.querySelectorAll('.menu-check').forEach(el => el.style.opacity = '0');
+    }
+
+    currentState.settings[key] = value;
+    document.getElementById(`val-${key}`).textContent = key === 'hue' ? `${value}°` : `${value}%`;
+
+    if (!currentState.active) {
+      currentState.active = true; // 调整设置时自动开启
+    }
+
+    applyState();
+    saveState();
+  }
+
+  function openSettings() {
+    const panel = document.getElementById('nightModeSettings');
+    panel.classList.remove('hidden');
+    updateSliders();
+  }
+
+  function closeSettings() {
+    document.getElementById('nightModeSettings').classList.add('hidden');
+  }
+
+  function updateSliders() {
+    const s = currentState.settings;
+    document.getElementById('slider-invert').value = s.invert;
+    document.getElementById('val-invert').textContent = s.invert + '%';
+
+    document.getElementById('slider-brightness').value = s.brightness;
+    document.getElementById('val-brightness').textContent = s.brightness + '%';
+
+    document.getElementById('slider-contrast').value = s.contrast;
+    document.getElementById('val-contrast').textContent = s.contrast + '%';
+
+    document.getElementById('slider-hue').value = s.hue;
+    document.getElementById('val-hue').textContent = s.hue + '°';
+  }
+
+  function applyState() {
     const body = document.body;
     const button = document.getElementById('customNightModeButton');
+    const root = document.documentElement;
 
-    // 清除所有模式类
-    body.classList.remove('custom-night-mode', 'night-mode-invert', 'night-mode-dim');
+    // 清除固定类，改用 CSS 变量
+    body.classList.remove('night-mode-invert', 'night-mode-dim');
 
-    if (state.active) {
+    if (currentState.active) {
       body.classList.add('custom-night-mode');
-      body.classList.add(`night-mode-${state.type}`);
 
-      // 更新按钮图标（激活状态显示太阳，表示点击关闭）
-      button.innerHTML = sunIconSVG + document.getElementById('nightModeMenu').outerHTML;
+      // 设置 CSS 变量
+      const s = currentState.settings;
+      root.style.setProperty('--pdf-invert', s.invert / 100);
+      root.style.setProperty('--pdf-brightness', s.brightness / 100);
+      root.style.setProperty('--pdf-contrast', s.contrast / 100);
+      root.style.setProperty('--pdf-hue', s.hue + 'deg');
+
+      button.innerHTML = sunIconSVG;
       button.title = '关闭夜间模式';
     } else {
-      // 关机状态显示月亮
-      button.innerHTML = moonIconSVG + document.getElementById('nightModeMenu').outerHTML;
+      body.classList.remove('custom-night-mode');
+      // 清除 CSS 变量
+      root.style.removeProperty('--pdf-invert');
+      root.style.removeProperty('--pdf-brightness');
+      root.style.removeProperty('--pdf-contrast');
+      root.style.removeProperty('--pdf-hue');
+
+      button.innerHTML = moonIconSVG;
       button.title = '开启夜间模式';
     }
 
     // 更新菜单选中状态
     document.querySelectorAll('.menu-check').forEach(el => el.style.opacity = '0');
-    const activeCheck = document.getElementById(`check-${state.type}`);
-    if (activeCheck) activeCheck.style.opacity = '1';
+    if (currentState.type !== 'custom') {
+      const activeCheck = document.getElementById(`check-${currentState.type}`);
+      if (activeCheck) activeCheck.style.opacity = '1';
+    }
   }
 
-  function saveState(state) {
-    chrome.storage.local.set({ nightModeState: state });
+  function saveState() {
+    chrome.storage.local.set({ nightModeState: currentState });
   }
 
   function loadNightModeState() {
     chrome.storage.local.get(['nightModeState', 'nightMode'], (result) => {
       // 迁移旧数据
       if (result.nightMode !== undefined && !result.nightModeState) {
-        const migratedState = {
-          active: result.nightMode,
-          type: 'invert'
-        };
-        saveState(migratedState);
-        applyState(migratedState);
-        chrome.storage.local.remove('nightMode'); // 清理旧键
-      } else {
-        applyState(result.nightModeState || DEFAULT_STATE);
+        currentState = { ...DEFAULT_STATE, active: result.nightMode };
+        // 如果是旧数据，默认用高对比度预设
+        currentState.settings = { ...PRESETS.invert };
+        saveState();
+        chrome.storage.local.remove('nightMode');
+      } else if (result.nightModeState) {
+        currentState = result.nightModeState;
+        // 确保 settings 存在（防止旧版本数据结构问题）
+        if (!currentState.settings) {
+          currentState.settings = { ...PRESETS.invert };
+        }
       }
+      applyState();
     });
   }
 
   function getModeName(type) {
-    return type === 'invert' ? '高对比度' : '护眼模式';
+    if (type === 'invert') return '高对比度';
+    if (type === 'dim') return '护眼模式';
+    return '自定义模式';
   }
 
   function showNotification(message) {
