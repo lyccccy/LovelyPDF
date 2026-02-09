@@ -680,3 +680,19 @@ body.custom-night-mode ::-webkit-scrollbar-thumb:hover {
     display: none;
   }
 }
+
+/* 编辑工具栏 hover 显示菜单 */
+#editorHighlight:hover .editorParamsToolbar,
+#editorFreeText:hover .editorParamsToolbar,
+#editorInk:hover .editorParamsToolbar,
+#editorStamp:hover .editorParamsToolbar {
+  display: block !important;
+  visibility: visible !important;
+  z-index: 10000;
+}
+
+/* 确保鼠标移动到菜单上时菜单不消失 */
+.editorParamsToolbar:hover {
+  display: block !important;
+  visibility: visible !important;
+}
