@@ -1,0 +1,498 @@
+/* 菜单样式 */
+.night-mode-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #2a2a2a;
+  border: 1px solid #4a4a4a;
+  border-radius: 4px;
+  padding: 4px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  min-width: 140px;
+  z-index: 1000;
+  margin-top: 5px;
+}
+
+.night-mode-menu.hidden {
+  display: none;
+}
+
+.menu-item {
+  display: flex !important;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #e0e0e0;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.menu-icon {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.menu-text {
+  flex: 1;
+}
+
+.menu-check {
+  font-weight: bold;
+  opacity: 0;
+  color: #667eea;
+}
+
+/* 通知动画 */
+.custom-notification {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 99999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease-out;
+}
+
+.custom-notification.fade-out {
+  animation: slideOut 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+}
+
+/* 夜间模式按钮样式 */
+#customNightModeButton {
+  min-width: 32px !important;
+  min-height: 32px !important;
+  padding: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+}
+
+/* SVG 图标样式 */
+#customNightModeButton svg.night-mode-icon {
+  width: 20px !important;
+  height: 20px !important;
+  display: block !important;
+  fill: currentColor !important;
+  transition: transform 0.3s ease !important;
+}
+
+#customNightModeButton:hover svg.night-mode-icon {
+  transform: scale(1.1) !important;
+}
+
+#customNightModeButton:hover {
+  background: rgba(0, 0, 0, 0.12) !important;
+}
+
+#customNightModeButton:active {
+  background: rgba(0, 0, 0, 0.2) !important;
+}
+
+#customNightModeButton:active svg.night-mode-icon {
+  transform: scale(0.95) !important;
+}
+
+/* 确保在夜间模式下按钮和图标可见 */
+body.custom-night-mode #customNightModeButton {
+  background-color: transparent !important;
+  color: #e0e0e0 !important;
+}
+
+body.custom-night-mode #customNightModeButton svg.night-mode-icon {
+  fill: #e0e0e0 !important;
+}
+
+body.custom-night-mode #customNightModeButton:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 基础夜间模式样式 - 柔和配色 */
+body.custom-night-mode {
+  background-color: #2d2d2d !important; /* 从 #1a1a1a 调亮 */
+}
+
+body.custom-night-mode #outerContainer {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+}
+
+body.custom-night-mode #mainContainer {
+  background-color: #2d2d2d !important; /* 从 #1a1a1a 调亮 */
+}
+
+body.custom-night-mode #viewerContainer {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+}
+
+/* 工具栏样式 - 柔和配色 */
+body.custom-night-mode .toolbar {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+  border-color: #4a4a4a !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+body.custom-night-mode #toolbarContainer {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+}
+
+body.custom-night-mode #toolbarViewer {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+}
+
+body.custom-night-mode #toolbarViewerLeft,
+body.custom-night-mode #toolbarViewerRight,
+body.custom-night-mode #toolbarViewerMiddle {
+  background-color: transparent !important;
+}
+
+/* 工具栏按钮 - 柔和文字颜色 */
+body.custom-night-mode .toolbarButton {
+  background-color: transparent !important;
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+}
+
+body.custom-night-mode .toolbarButton:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important; /* 降低悬停对比度 */
+}
+
+body.custom-night-mode .toolbarButton::before {
+  filter: invert(0.85) !important; /* 从 invert(1) 调暗 */
+}
+
+/* 工具栏输入框和选择框 - 柔和配色 */
+body.custom-night-mode #pageNumber,
+body.custom-night-mode #scaleSelect,
+body.custom-night-mode .toolbarField {
+  background-color: #4a4a4a !important; /* 从 #3a3a3a 调亮 */
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+  border-color: #5a5a5a !important; /* 从 #4a4a4a 调亮 */
+}
+
+body.custom-night-mode #numPages {
+  color: #999999 !important; /* 从 #a0a0a0 调暗 */
+}
+
+/* 工具栏分隔符 */
+body.custom-night-mode .verticalToolbarSeparator {
+  background-color: #5a5a5a !important; /* 从 #4a4a4a 调亮 */
+}
+
+body.custom-night-mode .horizontalToolbarSeparator {
+  background-color: #5a5a5a !important; /* 从 #4a4a4a 调亮 */
+}
+
+/* PDF 页面背景 - 柔和配色 */
+body.custom-night-mode .page {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+}
+
+body.custom-night-mode .canvasWrapper {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+}
+
+/* PDF Canvas 滤镜模式 */
+
+/* 1. 高对比度 (Invert) */
+body.custom-night-mode.night-mode-invert #viewer .page canvas {
+  opacity: 1 !important;
+  filter: invert(1) hue-rotate(180deg) !important;
+}
+
+/* 2. 护眼模式 (Dim) */
+body.custom-night-mode.night-mode-dim #viewer .page canvas {
+  opacity: 0.9 !important;
+  filter: brightness(0.8) contrast(0.9) !important;
+}
+
+/* 侧边栏 - 柔和配色 */
+body.custom-night-mode #sidebarContainer {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+  border-color: #4a4a4a !important;
+}
+
+body.custom-night-mode #sidebarContent {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+}
+
+body.custom-night-mode .thumbnail {
+  background-color: #4a4a4a !important; /* 从 #3a3a3a 调亮 */
+  border-color: #5a5a5a !important; /* 从 #4a4a4a 调亮 */
+}
+
+body.custom-night-mode .thumbnail:hover {
+  background-color: #555 !important; /* 从 #444 调亮 */
+}
+
+body.custom-night-mode .thumbnail.selected {
+  border-color: #667eea !important;
+}
+
+/* 下拉菜单 - 柔和配色 */
+body.custom-night-mode .doorHanger,
+body.custom-night-mode .doorHangerRight {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+  border-color: #4a4a4a !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.custom-night-mode .doorHanger::before,
+body.custom-night-mode .doorHanger::after,
+body.custom-night-mode .doorHangerRight::before,
+body.custom-night-mode .doorHangerRight::after {
+  border-bottom-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+}
+
+/* 菜单项 - 柔和配色 */
+body.custom-night-mode .menuContainer {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+}
+
+body.custom-night-mode .menuContainer button {
+  background-color: transparent !important;
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+}
+
+body.custom-night-mode .menuContainer button:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important; /* 从 0.1 调低 */
+}
+
+/* 编辑器工具栏和参数面板 - 柔和配色 */
+body.custom-night-mode .editorParamsToolbar {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+  border-color: #4a4a4a !important;
+}
+
+body.custom-night-mode .editorParamsToolbarContainer {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+}
+
+/* 高亮工具相关 - 柔和配色 */
+body.custom-night-mode #editorHighlightParamsToolbar,
+body.custom-night-mode #editorFreeTextParamsToolbar,
+body.custom-night-mode #editorInkParamsToolbar,
+body.custom-night-mode #editorStampParamsToolbar {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+  border-color: #4a4a4a !important;
+}
+
+/* 所有编辑器参数标签 - 柔和文字 */
+body.custom-night-mode .editorParamsLabel {
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+}
+
+/* 颜色选择器 */
+body.custom-night-mode .editorParamsColor {
+  border-color: #5a5a5a !important; /* 从 #4a4a4a 调亮 */
+}
+
+body.custom-night-mode .editorParamsColor button {
+  border-color: #5a5a5a !important; /* 从 #4a4a4a 调亮 */
+}
+
+/* 滑块和输入控件 - 柔和配色 */
+body.custom-night-mode .editorParamsSlider {
+  background-color: #4a4a4a !important; /* 从 #3a3a3a 调亮 */
+}
+
+body.custom-night-mode .editorParamsSlider::-webkit-slider-thumb {
+  background-color: #667eea !important;
+}
+
+body.custom-night-mode .editorParamsSlider::-moz-range-thumb {
+  background-color: #667eea !important;
+}
+
+/* 所有标签、文本和描述 - 柔和文字 */
+body.custom-night-mode label,
+body.custom-night-mode .label,
+body.custom-night-mode span:not(.night-mode-icon):not(svg *):not(.textLayer span):not(.canvasWrapper span) {
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+}
+
+/* 编辑器按钮组 - 柔和配色 */
+body.custom-night-mode #editorModeButtons button {
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+}
+
+body.custom-night-mode #editorModeButtons button:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important; /* 从 0.1 调低 */
+}
+
+/* 二级工具栏 - 柔和配色 */
+body.custom-night-mode #secondaryToolbar {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+}
+
+body.custom-night-mode #secondaryToolbar .secondaryToolbarButton {
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+}
+
+body.custom-night-mode #secondaryToolbar .secondaryToolbarButton:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important; /* 从 0.1 调低 */
+}
+
+body.custom-night-mode #secondaryToolbar .horizontalToolbarSeparator {
+  background-color: #5a5a5a !important; /* 从 #4a4a4a 调亮 */
+}
+
+/* 弹出菜单 - 柔和配色 */
+body.custom-night-mode .popupMenu {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+  border-color: #4a4a4a !important;
+}
+
+body.custom-night-mode .popupMenu button {
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+  background-color: transparent !important;
+}
+
+body.custom-night-mode .popupMenu button:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important; /* 从 0.1 调低 */
+}
+
+/* 所有菜单项文字 - 柔和配色 */
+body.custom-night-mode .menuItem,
+body.custom-night-mode [role="menuitem"],
+body.custom-night-mode [role="option"] {
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+}
+
+/* 侧边栏内容 - 柔和配色 */
+body.custom-night-mode #editorCommentsSidebar {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+}
+
+body.custom-night-mode #editorCommentsSidebarHeader {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+  border-color: #4a4a4a !important;
+}
+
+body.custom-night-mode .commentCount,
+body.custom-night-mode #editorCommentsSidebarTitle,
+body.custom-night-mode #editorCommentsSidebarCount {
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+}
+
+/* 所有文本输入和文本区域 - 柔和配色 */
+body.custom-night-mode textarea,
+body.custom-night-mode input[type="text"],
+body.custom-night-mode input[type="number"] {
+  background-color: #4a4a4a !important; /* 从 #3a3a3a 调亮 */
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+  border-color: #5a5a5a !important; /* 从 #4a4a4a 调亮 */
+}
+
+body.custom-night-mode textarea::placeholder,
+body.custom-night-mode input::placeholder {
+  color: #888 !important;
+}
+
+/* 选中状态 */
+body.custom-night-mode .selected,
+body.custom-night-mode [aria-selected="true"] {
+  background-color: rgba(102, 126, 234, 0.3) !important;
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+}
+
+/* 禁用状态 */
+body.custom-night-mode button:disabled,
+body.custom-night-mode input:disabled,
+body.custom-night-mode select:disabled {
+  opacity: 0.5 !important;
+  color: #777 !important; /* 从 #666 调亮 */
+}
+
+/* 输入框、选择框、按钮通用样式 - 柔和配色 */
+body.custom-night-mode input,
+body.custom-night-mode select,
+body.custom-night-mode button {
+  background-color: #4a4a4a !important; /* 从 #3a3a3a 调亮 */
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+  border-color: #5a5a5a !important; /* 从 #4a4a4a 调亮 */
+}
+
+body.custom-night-mode input:focus,
+body.custom-night-mode select:focus {
+  border-color: #667eea !important;
+  outline-color: #667eea !important;
+}
+
+/* 对话框 - 柔和配色 */
+body.custom-night-mode .dialog {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+  border-color: #4a4a4a !important;
+}
+
+body.custom-night-mode .dialog .row {
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+}
+
+/* 查找栏 - 柔和配色 */
+body.custom-night-mode #findbar {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+  border-color: #4a4a4a !important;
+}
+
+body.custom-night-mode #findInput {
+  background-color: #4a4a4a !important; /* 从 #3a3a3a 调亮 */
+  color: #c0c0c0 !important; /* 从 #e0e0e0 调暗 */
+}
+
+/* 滚动条 - 柔和配色 */
+body.custom-night-mode ::-webkit-scrollbar {
+  background-color: #3a3a3a !important; /* 从 #2a2a2a 调亮 */
+}
+
+body.custom-night-mode ::-webkit-scrollbar-thumb {
+  background-color: #5a5a5a !important; /* 从 #4a4a4a 调亮 */
+}
+
+body.custom-night-mode ::-webkit-scrollbar-thumb:hover {
+  background-color: #6a6a6a !important; /* 从 #5a5a5a 调亮 */
+}
+
+/* 响应式设计 - 在小屏幕上隐藏按钮 */
+@media (max-width: 768px) {
+  #customNightModeButton {
+    display: none;
+  }
+}

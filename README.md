@@ -1,5 +1,17 @@
 # PDF 查看器 Chrome 扩展
 
+## ✨ 功能特性
+
+### 核心功能
+- 🎯 自动拦截并使用自定义 PDF.js 查看器打开 PDF 文件
+- 📁 支持本地文件（file://）和远程文件（http/https）
+- 🌐 已禁用跨域检查，可加载任何来源的 PDF
+
+### 🆕 自定义功能
+- 🌙 **夜间模式**：护眼深色主题，长时间阅读更舒适，一键切换日间/夜间模式
+
+---
+
 ## 问题原因
 
 您遇到的错误是：
@@ -50,10 +62,39 @@ You do not have permission to use blocking webRequest listeners
    - 应该会自动使用自定义的 PDF.js 查看器打开
    - 或者打开项目中的 `test.html` 进行测试
 
-5. **查看控制台**
+5. **测试夜间模式**
+   - 在 PDF 查看器右上角找到 🌙 按钮
+   - 点击切换夜间/日间模式
+   - 观察界面颜色变化
+
+6. **查看控制台**
    - 访问 `chrome://extensions/`
    - 找到您的扩展，点击"Service Worker"
    - 应该能看到 "PDF Extension Installed" 和重定向日志
+
+---
+
+## 🌙 使用夜间模式
+
+### 在 PDF 查看器中
+打开任意 PDF 后，在右上角工具栏可以看到夜间模式按钮：
+
+```
+[打印] [下载] | [🌙 夜间模式] | [工具]
+```
+
+**夜间模式按钮** 🌙/☀️
+- 点击切换深色/浅色主题
+- 自动保存偏好设置
+- 再次打开 PDF 时会记住你的选择
+- 图标会随模式切换：🌙（日间） ↔ ☀️（夜间）
+
+### 夜间模式特点
+- 深色背景保护眼睛
+- PDF 内容颜色自动反转
+- 工具栏和侧边栏统一深色主题
+- 适合长时间阅读
+
 
 ## 架构说明
 
@@ -135,6 +176,8 @@ webNavigation.onBeforeNavigate 拦截
 - `viewer-wrapper.html` - 包装页面，提供文件选择器
 - `viewer-wrapper.js` - 加载逻辑，处理本地/远程文件
 - `pdfjs/` - PDF.js 查看器资源（已修改，禁用 origin 检查）
+  - `pdfjs/web/custom-buttons.js` - 夜间模式功能逻辑
+  - `pdfjs/web/custom-buttons.css` - 夜间模式样式
 - `README.md` - 完整文档
 - `SETUP.md` - 快速设置指南
 - `LIMITATIONS.md` - 技术限制说明

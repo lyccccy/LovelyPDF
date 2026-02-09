@@ -2,6 +2,7 @@
   "manifest_version": 3,
   "name": "My Custom PDF Viewer",
   "version": "1.0",
+  "description": "自定义 PDF 查看器，支持夜间模式",
   "permissions": [
     "webNavigation",
     "storage",
