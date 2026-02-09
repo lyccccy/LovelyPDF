@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PDF 测试页面</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 { color: #333; }
+    .test-section {
+      background: #f5f5f5;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+    }
+    a {
+      color: #0066cc;
+      text-decoration: none;
+      padding: 5px 10px;
+      display: inline-block;
+      margin: 5px 0;
+    }
+    a:hover {
+      background: #e6f2ff;
+      border-radius: 4px;
+    }
+    .status {
+      background: #fff3cd;
+      padding: 15px;
+      margin: 20px 0;
+      border-left: 4px solid #ffc107;
+      border-radius: 4px;
+    }
+    code {
+      background: #e8e8e8;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 PDF 扩展测试页面</h1>
+  
+  <div class="status">
+    <strong>⚠️ 测试前请确保：</strong>
+    <ol>
+      <li>已在 <code>chrome://extensions/</code> 中加载或刷新扩展</li>
+      <li>扩展已启用</li>
+      <li>打开扩展的 Service Worker 控制台查看日志</li>
+    </ol>
+  </div>
+
+  <div class="test-section">
+    <h2>测试 1: 标准 PDF 链接</h2>
+    <p>这些链接应该会被扩展拦截并用自定义查看器打开：</p>
+    <ul>
+      <li><a href="https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf" target="_blank">Mozilla PDF.js 示例 PDF</a></li>
+      <li><a href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" target="_blank">W3C Dummy PDF</a></li>
+      <li><a href="https://www.africau.edu/images/default/sample.pdf" target="_blank">Sample PDF</a></li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>测试 2: 带参数的 PDF URL</h2>
+    <p>测试 URL 中包含查询参数的情况：</p>
+    <ul>
+      <li><a href="https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf?page=1" target="_blank">PDF with query parameter</a></li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>📋 预期行为</h2>
+    <ul>
+      <li>✅ 点击链接后应该跳转到扩展的 PDF 查看器</li>
+      <li>✅ URL 应该包含 <code>chrome-extension://</code></li>
+      <li>✅ Service Worker 控制台应该显示 "Redirected PDF: [url]"</li>
+      <li>✅ PDF 内容应该在自定义查看器中正常显示</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>🐛 故障排除</h2>
+    <p><strong>如果 PDF 没有被拦截：</strong></p>
+    <ol>
+      <li>检查扩展是否已启用</li>
+      <li>刷新扩展（chrome://extensions/ 中点击刷新按钮）</li>
+      <li>查看 Service Worker 控制台是否有错误</li>
+      <li>尝试在新标签页中打开链接（而不是当前标签页）</li>
+      <li>检查 Chrome 是否禁用了第三方扩展拦截 PDF</li>
+    </ol>
+    
+    <p><strong>已知限制：</strong></p>
+    <ul>
+      <li>Chrome 的内置 PDF 查看器可能在某些情况下优先级更高</li>
+      <li>某些网站可能使用 iframe 嵌入 PDF，这种情况更难拦截</li>
+      <li>需要 CORS 支持的 PDF 可能无法加载</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>📝 手动测试方法</h2>
+    <p>如果自动拦截不工作，您可以：</p>
+    <ol>
+      <li>复制 PDF URL</li>
+      <li>在地址栏输入：<code>chrome-extension://[扩展ID]/pdfjs/web/viewer.html?file=[PDF_URL]</code></li>
+      <li>将 [扩展ID] 替换为您的扩展 ID（在 chrome://extensions/ 中查看）</li>
+      <li>将 [PDF_URL] 替换为 URL 编码后的 PDF 链接</li>
+    </ol>
+  </div>
+
+  <script>
+    // 显示扩展信息（如果在扩展上下文中）
+    if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id) {
+      const info = document.createElement('div');
+      info.className = 'status';
+      info.innerHTML = `
+        <strong>✅ 扩展信息：</strong><br>
+        扩展 ID: <code>${chrome.runtime.id}</code><br>
+        Viewer URL 格式: <code>chrome-extension://${chrome.runtime.id}/pdfjs/web/viewer.html?file=[URL]</code>
+      `;
+      document.body.insertBefore(info, document.body.firstChild);
+    }
+  </script>
+</body>
+</html>
+
