@@ -284,8 +284,8 @@
       document.getElementById(`val-${key}`).textContent = key === 'hue' ? `${value}°` : `${value}%`;
     }
 
-    if (!currentState.active) {
-      currentState.active = true; // 调整设置时自动开启
+    if (!currentState.active && !backgroundKeys.includes(key)) {
+      currentState.active = true; // 调整非背景设置时自动开启夜间模式
     }
 
     applyState();
