@@ -143,20 +143,43 @@ body.custom-night-mode #customNightModeButton:hover {
 body.custom-night-mode {
   background-color: #2d2d2d !important;
   /* 从 #1a1a1a 调亮 */
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  /* 支持背景图片和亮度调节 */
+  /* 使用 linear-gradient 叠加层来实现变暗效果 */
+  background-image: linear-gradient(rgba(0, 0, 0, var(--pdf-background-overlay-opacity, 0.5)), rgba(0, 0, 0, var(--pdf-background-overlay-opacity, 0.5))), var(--pdf-background-image) !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-blend-mode: normal !important;
 }
 
-body.custom-night-mode #outerContainer {
-  background-color: #3a3a3a !important;
+/* 全局背景支持 (即使关闭夜间模式) */
+body.has-custom-background {
+  background-image: linear-gradient(rgba(0, 0, 0, var(--pdf-background-overlay-opacity, 0.5)), rgba(0, 0, 0, var(--pdf-background-overlay-opacity, 0.5))), var(--pdf-background-image) !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-blend-mode: normal !important;
+}
+
+body.custom-night-mode #outerContainer,
+body.has-custom-background #outerContainer {
+  background-color: transparent !important;
   /* 从 #2a2a2a 调亮 */
 }
 
-body.custom-night-mode #mainContainer {
-  background-color: #2d2d2d !important;
+body.custom-night-mode #mainContainer,
+body.has-custom-background #mainContainer {
+  background-color: transparent !important;
   /* 从 #1a1a1a 调亮 */
 }
 
-body.custom-night-mode #viewerContainer {
-  background-color: #3a3a3a !important;
+body.custom-night-mode #viewerContainer,
+body.has-custom-background #viewerContainer {
+  background-color: transparent !important;
   /* 从 #2a2a2a 调亮 */
 }
 
@@ -323,6 +346,33 @@ body.custom-night-mode #viewer .page canvas {
   text-align: right;
   font-size: 12px;
   color: #a0a0a0;
+}
+
+.night-mode-settings .setting-row.full-width {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.night-mode-settings .setting-row.full-width label {
+  margin-bottom: 6px;
+  width: 100%;
+}
+
+.night-mode-settings input[type="text"] {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+body.custom-night-mode .night-mode-settings input[type="text"] {
+  background-color: #4a4a4a !important;
+  border-color: #5a5a5a !important;
+  color: #c0c0c0 !important;
 }
 
 .settings-footer {
