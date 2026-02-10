@@ -1,0 +1,145 @@
+/* AI Sidebar */
+#aiSidebar {
+    position: absolute;
+    top: 0;
+    right: -320px;
+    /* Initially hidden */
+    width: 320px;
+    height: 100%;
+    background-color: var(--ui-bg, #ffffff);
+    border-left: 1px solid var(--ui-border, #e0e0e0);
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+    z-index: 10002;
+    /* Above everything else */
+    transition: right 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--ui-text, #333);
+}
+
+#aiSidebar.open {
+    right: 0;
+    box-shadow: none;
+    /* Merge with container */
+    border-left: 1px solid var(--ui-border, #e0e0e0);
+}
+
+/* Push Main Container */
+body.ai-sidebar-active #mainContainer {
+    right: 320px !important;
+}
+
+#mainContainer {
+    transition: right 0.3s ease;
+}
+
+/* Header */
+.ai-sidebar-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--ui-border, #e0e0e0);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ai-sidebar-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ai-sidebar-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--ui-text, #333);
+    opacity: 0.6;
+}
+
+.ai-sidebar-close:hover {
+    opacity: 1;
+}
+
+/* Content */
+.ai-sidebar-content {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Action Button */
+.ai-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform 0.1s, box-shadow 0.2s;
+    width: 100%;
+}
+
+.ai-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(118, 75, 162, 0.3);
+}
+
+.ai-btn:active {
+    transform: translateY(0);
+}
+
+.ai-btn:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+/* Result Area */
+#aiSummaryResult {
+    flex: 1;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    border: 1px solid var(--ui-border, #e0e0e0);
+}
+
+/* Dark mode adjustments for result area rely on --ui variables, 
+   but specific overrides can be added if needed */
+body.custom-night-mode #aiSummaryResult {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Toggle Button (In Toolbar) */
+#viewAI {
+    position: relative;
+}
+
+#viewAI::after {
+    content: "AI";
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 8px;
+    font-weight: bold;
+    background: #667eea;
+    color: white;
+    padding: 1px 3px;
+    border-radius: 4px;
+}
