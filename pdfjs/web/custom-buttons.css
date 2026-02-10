@@ -241,56 +241,109 @@ body.custom-night-mode #numPages {
   /* 从 #a0a0a0 调暗 */
 }
 
-/* 工具栏分隔符 */
-body.custom-night-mode .verticalToolbarSeparator {
-  background-color: #5a5a5a !important;
-  /* 从 #4a4a4a 调亮 */
+:root {
+  --ui-bg: #ffffff;
+  --ui-text: #333333;
+  --ui-border: #e0e0e0;
+  --ui-hover: #f5f5f5;
+  --ui-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --ui-accent: #2196f3;
 }
 
-body.custom-night-mode .horizontalToolbarSeparator {
-  background-color: #5a5a5a !important;
-  /* 从 #4a4a4a 调亮 */
+body.custom-night-mode {
+  --ui-bg: rgba(45, 45, 45, 0.95);
+  --ui-text: #e0e0e0;
+  --ui-border: #444;
+  --ui-hover: #3d3d3d;
+  --ui-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --ui-accent: #64b5f6;
 }
 
-/* PDF 页面背景 - 柔和配色 */
-body.custom-night-mode .page {
-  background-color: #3a3a3a !important;
-  /* 从 #2a2a2a 调亮 */
-}
+/* =========================================
+   3. 夜间模式菜单 (弹窗) - 适配主题
+   ========================================= */
 
-body.custom-night-mode .canvasWrapper {
-  background-color: #3a3a3a !important;
-  /* 从 #2a2a2a 调亮 */
-}
-
-/* 菜单分隔符 */
-.menu-separator {
-  height: 1px;
-  background: #4a4a4a;
-  margin: 4px 0;
-}
-
-/* PDF Canvas 滤镜模式 */
+/* PDF Canvas 滤镜模式 (Restored) */
 body.custom-night-mode #viewer .page canvas {
   opacity: 1 !important;
   /* 使用 CSS 变量控制滤镜 */
   filter: invert(var(--pdf-invert, 1)) hue-rotate(var(--pdf-hue, 180deg)) brightness(var(--pdf-brightness, 1)) contrast(var(--pdf-contrast, 1)) !important;
 }
 
-/* 设置面板样式 */
+.night-mode-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 180px;
+  background-color: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  box-shadow: var(--ui-shadow);
+  padding: 8px 0;
+  z-index: 1000;
+  margin-top: 8px;
+  backdrop-filter: blur(10px);
+  /* 毛玻璃效果 */
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  cursor: pointer;
+  color: var(--ui-text);
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.menu-item:hover {
+  background-color: var(--ui-hover);
+}
+
+.menu-icon {
+  margin-right: 12px;
+  width: 16px;
+  text-align: center;
+}
+
+.menu-text {
+  flex: 1;
+}
+
+.menu-check {
+  color: var(--ui-accent);
+  font-weight: bold;
+  opacity: 0;
+  /* 默认隐藏 */
+  transition: opacity 0.2s;
+}
+
+.menu-separator {
+  height: 1px;
+  background-color: var(--ui-border);
+  margin: 4px 0;
+}
+
+/* =========================================
+   4. 自定义设置面板 - 适配主题
+   ========================================= */
 .night-mode-settings {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #2a2a2a;
-  border: 1px solid #4a4a4a;
-  border-radius: 8px;
-  padding: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-  z-index: 10001;
   width: 320px;
-  color: #e0e0e0;
+  background-color: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: 12px;
+  box-shadow: var(--ui-shadow);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  color: var(--ui-text);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .night-mode-settings.hidden {
@@ -298,42 +351,51 @@ body.custom-night-mode #viewer .page canvas {
 }
 
 .settings-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--ui-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  border-bottom: 1px solid #4a4a4a;
-  padding-bottom: 8px;
 }
 
 .settings-header h3 {
   margin: 0;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .close-btn {
   background: none;
   border: none;
-  color: #a0a0a0;
   font-size: 20px;
   cursor: pointer;
-  padding: 0 4px;
+  color: var(--ui-text);
+  opacity: 0.6;
 }
 
 .close-btn:hover {
-  color: #fff;
+  opacity: 1;
+}
+
+.settings-body {
+  padding: 16px;
 }
 
 .setting-row {
-  margin-bottom: 12px;
   display: flex;
   align-items: center;
+  margin-bottom: 16px;
+}
+
+.setting-row.full-width {
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .setting-row label {
-  width: 130px;
+  width: 120px;
   font-size: 13px;
+  color: var(--ui-text);
 }
 
 .setting-row input[type="range"] {
@@ -341,37 +403,10 @@ body.custom-night-mode #viewer .page canvas {
   cursor: pointer;
 }
 
-.setting-row .value {
-  width: 45px;
-  text-align: right;
-  font-size: 12px;
-  color: #a0a0a0;
-}
-
-.night-mode-settings .setting-row.full-width {
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.night-mode-settings .setting-row.full-width label {
-  margin-bottom: 6px;
+.setting-row input[type="text"] {
   width: 100%;
-}
-
-.night-mode-settings input[type="text"] {
-  width: 100%;
+  margin-top: 8px;
   padding: 6px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fff;
-  color: #333;
-  font-size: 13px;
-  box-sizing: border-box;
-}
-
-body.custom-night-mode .night-mode-settings input[type="text"] {
-  background-color: #4a4a4a !important;
-  border-color: #5a5a5a !important;
   color: #c0c0c0 !important;
 }
 
