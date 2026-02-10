@@ -35,11 +35,17 @@ See https://github.com/adobe-type-tools/cmap-resources
   <link rel="stylesheet" href="viewer.css" />
   <link rel="stylesheet" href="custom-buttons.css" />
   <link rel="stylesheet" href="ai-sidebar.css"> <!-- AI Sidebar -->
+  
+  <!-- KaTeX for Math rendering (CSS 使用 CDN，JS 使用本地文件) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
 
   <script src="viewer.mjs" type="module"></script>
   <script src="custom-buttons.js" defer></script>
   <!-- Marked.js for Markdown rendering (本地版本) -->
   <script src="marked.min.js"></script>
+  <!-- KaTeX JavaScript (本地版本) -->
+  <script src="katex.min.js"></script>
+  <script src="auto-render.min.js"></script>
   <script src="ai-sidebar.js" type="module"></script> <!-- AI Sidebar (作为模块加载) -->
 </head>
 

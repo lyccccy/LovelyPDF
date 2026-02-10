@@ -429,6 +429,42 @@ body.custom-night-mode #viewer .page canvas {
   background: #5a5a5a;
 }
 
+/* 📁 文件选择按钮 */
+.browse-btn {
+  background: #4a90e2;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 36px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.browse-btn:hover {
+  background: #357abd;
+  transform: scale(1.05);
+}
+
+.browse-btn:active {
+  transform: scale(0.95);
+}
+
+/* 夜间模式下的浏览按钮 */
+body.custom-night-mode .browse-btn {
+  background: #0078d4;
+}
+
+body.custom-night-mode .browse-btn:hover {
+  background: #106ebe;
+}
+
 /* 侧边栏 - 柔和配色 */
 body.custom-night-mode #viewsManager {
   background-color: #3a3a3a !important;

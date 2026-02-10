@@ -85,8 +85,39 @@ import { config } from './config.js';
             <div class="ai-sidebar-header">
               <div class="ai-header-title">✨ AI Assistant</div>
               <div class="ai-header-actions">
+                <button class="ai-settings-btn" id="aiSettingsBtn" title="设置">⚙️</button>
                 <button class="ai-clear-btn" id="clearAIHistory" title="清除对话历史">🗑️</button>
                 <button class="ai-sidebar-close" id="closeAISidebar">×</button>
+              </div>
+            </div>
+            
+            <!-- 设置面板 -->
+            <div class="ai-settings-panel" id="aiSettingsPanel" style="display: none;">
+              <div class="settings-header">
+                <h3>⚙️ API 设置</h3>
+                <button class="settings-close" id="closeSettings">×</button>
+              </div>
+              <div class="settings-content">
+                <div class="setting-item">
+                  <label for="apiBaseUrl">Base URL:</label>
+                  <input type="text" id="apiBaseUrl" placeholder="https://api.openai.com/v1" />
+                </div>
+                <div class="setting-item">
+                  <label for="apiKey">API Key:</label>
+                  <input type="password" id="apiKey" placeholder="sk-..." />
+                  <button class="toggle-password" id="togglePassword" type="button">👁️</button>
+                </div>
+                <div class="setting-item">
+                  <label for="apiModel">模型:</label>
+                  <input type="text" id="apiModel" placeholder="gpt-3.5-turbo" />
+                </div>
+                <div class="settings-actions">
+                  <button class="btn-save" id="saveSettings">保存设置</button>
+                  <button class="btn-reset" id="resetSettings">恢复默认</button>
+                </div>
+                <div class="settings-info">
+                  💡 设置会保存在本地，刷新页面后依然有效
+                </div>
               </div>
             </div>
             
@@ -103,7 +134,7 @@ import { config } from './config.js';
                     <svg viewBox="0 0 24 24"><path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                 </button>
               </div>
-              <div class="ai-input-footer">Powered by Gemini</div>
+              <div class="ai-input-footer">Powered by AI</div>
             </div>
           </div>
         `;
@@ -113,6 +144,13 @@ import { config } from './config.js';
         document.getElementById('closeAISidebar').addEventListener('click', closeSidebar);
         document.getElementById('clearAIHistory').addEventListener('click', clearHistory);
         document.getElementById('aiSendBtn').addEventListener('click', handleSendMessage);
+        
+        // 设置按钮事件
+        document.getElementById('aiSettingsBtn').addEventListener('click', toggleSettings);
+        document.getElementById('closeSettings').addEventListener('click', closeSettings);
+        document.getElementById('saveSettings').addEventListener('click', saveSettings);
+        document.getElementById('resetSettings').addEventListener('click', resetSettings);
+        document.getElementById('togglePassword').addEventListener('click', togglePasswordVisibility);
         
         const aiInput = document.getElementById('aiInput');
         aiInput.addEventListener('keydown', (e) => {
@@ -135,6 +173,9 @@ import { config } from './config.js';
         if (loadConversationHistory()) {
             restoreChatUI();
         }
+        
+        // 6. 📂 加载用户设置
+        loadUserSettings();
 
         // 🧪 开发者工具：在控制台提供测试函数
         window.testThinkingAnimation = function() {
@@ -166,6 +207,24 @@ import { config } from './config.js';
                 
                 if (msg.role === 'assistant' && window.marked) {
                     msgDiv.innerHTML = marked.parse(msg.content);
+                    
+                    // 🧮 渲染数学公式
+                    if (window.renderMathInElement) {
+                        try {
+                            renderMathInElement(msgDiv, {
+                                delimiters: [
+                                    {left: '$$', right: '$$', display: true},
+                                    {left: '$', right: '$', display: false},
+                                    {left: '\\[', right: '\\]', display: true},
+                                    {left: '\\(', right: '\\)', display: false}
+                                ],
+                                throwOnError: false,
+                                errorColor: '#cc0000'
+                            });
+                        } catch (mathErr) {
+                            console.error('❌ 恢复消息时数学公式渲染失败:', mathErr);
+                        }
+                    }
                 } else {
                     msgDiv.innerText = msg.content;
                 }
@@ -226,6 +285,116 @@ import { config } from './config.js';
         const container = document.getElementById('aiChatContainer');
         container.innerHTML = '<div class="chat-message assistant-msg">对话历史已清除。你可以开始新的对话。</div>';
         console.log('✅ 对话历史已清除');
+    }
+
+    // --- 设置相关函数 ---
+
+    function toggleSettings() {
+        const panel = document.getElementById('aiSettingsPanel');
+        const chatContainer = document.getElementById('aiChatContainer');
+        
+        if (panel.style.display === 'none') {
+            panel.style.display = 'block';
+            chatContainer.style.display = 'none';
+        } else {
+            panel.style.display = 'none';
+            chatContainer.style.display = 'flex';
+        }
+    }
+
+    function closeSettings() {
+        const panel = document.getElementById('aiSettingsPanel');
+        const chatContainer = document.getElementById('aiChatContainer');
+        panel.style.display = 'none';
+        chatContainer.style.display = 'flex';
+    }
+
+    function togglePasswordVisibility() {
+        const input = document.getElementById('apiKey');
+        const button = document.getElementById('togglePassword');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            button.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            button.textContent = '👁️';
+        }
+    }
+
+    function saveSettings() {
+        const baseUrl = document.getElementById('apiBaseUrl').value.trim();
+        const apiKey = document.getElementById('apiKey').value.trim();
+        const model = document.getElementById('apiModel').value.trim();
+        
+        if (!baseUrl && !apiKey && !model) {
+            alert('⚠️ 请至少填写一项设置');
+            return;
+        }
+        
+        const settings = {
+            API_URL: baseUrl || config.API_URL,
+            API_KEY: apiKey || config.API_KEY,
+            MODEL: model || config.MODEL
+        };
+        
+        // 保存到 localStorage
+        try {
+            localStorage.setItem('ai_settings', JSON.stringify(settings));
+            
+            // 更新全局配置
+            config.API_URL = settings.API_URL;
+            config.API_KEY = settings.API_KEY;
+            config.MODEL = settings.MODEL;
+            
+            console.log('✅ 设置已保存:', settings);
+            alert('✅ 设置已保存！');
+            closeSettings();
+        } catch (err) {
+            console.error('❌ 保存设置失败:', err);
+            alert('❌ 保存设置失败：' + err.message);
+        }
+    }
+
+    function resetSettings() {
+        if (!confirm('确定要恢复默认设置吗？这将清除您保存的 API 配置。')) {
+            return;
+        }
+        
+        // 从 localStorage 删除
+        localStorage.removeItem('ai_settings');
+        
+        // 恢复为 config.js 中的默认值
+        // 注意：这里需要重新导入原始配置
+        document.getElementById('apiBaseUrl').value = '';
+        document.getElementById('apiKey').value = '';
+        document.getElementById('apiModel').value = '';
+        
+        console.log('✅ 已恢复默认设置');
+        alert('✅ 已恢复默认设置！刷新页面后生效。');
+    }
+
+    function loadUserSettings() {
+        try {
+            const savedSettings = localStorage.getItem('ai_settings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                
+                // 更新全局配置
+                if (settings.API_URL) config.API_URL = settings.API_URL;
+                if (settings.API_KEY) config.API_KEY = settings.API_KEY;
+                if (settings.MODEL) config.MODEL = settings.MODEL;
+                
+                // 更新 UI
+                document.getElementById('apiBaseUrl').value = settings.API_URL || '';
+                document.getElementById('apiKey').value = settings.API_KEY || '';
+                document.getElementById('apiModel').value = settings.MODEL || '';
+                
+                console.log('📂 已加载用户设置');
+            }
+        } catch (err) {
+            console.error('❌ 加载设置失败:', err);
+        }
     }
 
     async function handleSendMessage() {
@@ -416,6 +585,27 @@ import { config } from './config.js';
                 displayElement.innerHTML = htmlContent;
                 console.log('✨ Markdown 渲染完成');
                 console.log('📝 渲染后的 HTML 长度:', htmlContent.length);
+                
+                // 🧮 渲染数学公式 (KaTeX)
+                if (window.renderMathInElement) {
+                    try {
+                        renderMathInElement(displayElement, {
+                            delimiters: [
+                                {left: '$$', right: '$$', display: true},   // 块级公式
+                                {left: '$', right: '$', display: false},    // 行内公式
+                                {left: '\\[', right: '\\]', display: true}, // LaTeX 块级
+                                {left: '\\(', right: '\\)', display: false} // LaTeX 行内
+                            ],
+                            throwOnError: false,
+                            errorColor: '#cc0000'
+                        });
+                        console.log('🧮 数学公式渲染完成');
+                    } catch (mathErr) {
+                        console.error('❌ 数学公式渲染失败:', mathErr);
+                    }
+                } else {
+                    console.warn('⚠️ KaTeX 未加载，跳过数学公式渲染');
+                }
             } catch (err) {
                 console.error('❌ Markdown 渲染失败:', err);
                 console.error('错误详情:', err.message);

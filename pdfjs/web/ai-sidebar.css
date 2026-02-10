@@ -48,6 +48,7 @@
     align-items: center;
 }
 
+.ai-settings-btn,
 .ai-clear-btn {
     background: none;
     border: none;
@@ -57,6 +58,11 @@
     border-radius: 6px;
     opacity: 0.6;
     transition: all 0.2s;
+}
+
+.ai-settings-btn:hover {
+    opacity: 1;
+    background: rgba(0, 122, 255, 0.1);
 }
 
 .ai-clear-btn:hover {
@@ -83,6 +89,200 @@
 .ai-sidebar-close:hover {
     background: rgba(0,0,0,0.05);
     color: #333;
+}
+
+/* ============================================
+   设置面板样式
+   ============================================ */
+
+.ai-settings-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--sidebar-bg);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.settings-header {
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.settings-header h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.settings-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    transition: all 0.2s;
+}
+
+.settings-close:hover {
+    background: rgba(0,0,0,0.05);
+    color: #333;
+}
+
+.settings-content {
+    padding: 20px;
+    flex: 1;
+}
+
+.setting-item {
+    margin-bottom: 20px;
+}
+
+.setting-item label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+}
+
+.setting-item input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.setting-item input:focus {
+    outline: none;
+    border-color: #0062fa;
+}
+
+.setting-item {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 38px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.toggle-password:hover {
+    opacity: 1;
+}
+
+.settings-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.btn-save,
+.btn-reset {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-save {
+    background: #0062fa;
+    color: white;
+}
+
+.btn-save:hover {
+    background: #0052d9;
+}
+
+.btn-reset {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.btn-reset:hover {
+    background: #e0e0e0;
+}
+
+.settings-info {
+    margin-top: 16px;
+    padding: 12px;
+    background: #f0f7ff;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #0062fa;
+    line-height: 1.5;
+}
+
+/* 夜间模式下的设置面板 */
+body.custom-night-mode .ai-settings-panel {
+    background: #1e1e1e;
+}
+
+body.custom-night-mode .settings-header {
+    border-bottom-color: #333;
+}
+
+body.custom-night-mode .settings-header h3,
+body.custom-night-mode .settings-close {
+    color: #eee;
+}
+
+body.custom-night-mode .setting-item label {
+    color: #aaa;
+}
+
+body.custom-night-mode .setting-item input {
+    background: #2d2d2d;
+    border-color: #444;
+    color: #fff;
+}
+
+body.custom-night-mode .setting-item input:focus {
+    border-color: #0078d4;
+}
+
+body.custom-night-mode .btn-reset {
+    background: #333;
+    color: #eee;
+}
+
+body.custom-night-mode .btn-reset:hover {
+    background: #444;
+}
+
+body.custom-night-mode .settings-info {
+    background: rgba(0, 120, 212, 0.1);
+    color: #4dabf7;
 }
 
 /* 对话区域样式 - Cursor 风格 */
@@ -203,6 +403,49 @@
     text-decoration: underline;
 }
 
+/* ============================================
+   数学公式样式 (KaTeX)
+   ============================================ */
+
+/* 行内公式 */
+.assistant-msg .katex {
+    font-size: 1.05em;
+    color: inherit;
+}
+
+/* 块级公式 */
+.assistant-msg .katex-display {
+    margin: 16px 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* 公式容器 */
+.assistant-msg .katex-display > .katex {
+    text-align: center;
+    display: block;
+    padding: 8px 0;
+}
+
+/* 公式滚动条样式 */
+.assistant-msg .katex-display::-webkit-scrollbar {
+    height: 6px;
+}
+
+.assistant-msg .katex-display::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 3px;
+}
+
+.assistant-msg .katex-display::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.assistant-msg .katex-display::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
 .assistant-msg table {
     border-collapse: collapse;
     width: 100%;
@@ -267,6 +510,23 @@ body.custom-night-mode .assistant-msg th {
 
 body.custom-night-mode .assistant-msg hr {
     border-top-color: #444;
+}
+
+/* 夜间模式下的数学公式 */
+body.custom-night-mode .assistant-msg .katex {
+    color: #eee;
+}
+
+body.custom-night-mode .assistant-msg .katex-display::-webkit-scrollbar-track {
+    background: #2d2d2d;
+}
+
+body.custom-night-mode .assistant-msg .katex-display::-webkit-scrollbar-thumb {
+    background: #555;
+}
+
+body.custom-night-mode .assistant-msg .katex-display::-webkit-scrollbar-thumb:hover {
+    background: #777;
 }
 
 /* 思考中动画 */

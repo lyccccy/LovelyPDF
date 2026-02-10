@@ -107,7 +107,11 @@
           <div id="bg-settings-container" class="hidden">
             <div class="setting-row full-width">
               <label>背景图片 (URL/Path)</label>
-              <input type="text" id="input-bg-image" placeholder="输入图片地址">
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="text" id="input-bg-image" placeholder="输入图片地址或选择文件" style="flex: 1;">
+                <button id="btn-browse-image" class="browse-btn" title="选择本地图片">📁</button>
+              </div>
+              <input type="file" id="file-bg-image" accept="image/*" style="display: none;">
             </div>
             <div class="setting-row">
               <label>背景亮度 (Opacity)</label>
@@ -231,7 +235,70 @@
     // 背景图片输入事件
     const bgInput = document.getElementById('input-bg-image');
     bgInput.addEventListener('change', (e) => {
-      updateSetting('backgroundImage', e.target.value);
+      let imagePath = e.target.value.trim();
+      
+      // 🔧 如果是本地绝对路径，转换为 file:// 协议
+      if (imagePath && !imagePath.startsWith('http://') && 
+          !imagePath.startsWith('https://') && 
+          !imagePath.startsWith('file://') &&
+          !imagePath.startsWith('data:') &&
+          !imagePath.startsWith('blob:')) {
+        
+        // 如果是绝对路径（以 / 或盘符开头），添加 file:// 前缀
+        if (imagePath.startsWith('/') || /^[a-zA-Z]:/.test(imagePath)) {
+          imagePath = 'file://' + imagePath;
+          console.log('✅ 已转换本地路径为 file:// 协议:', imagePath);
+        }
+      }
+      
+      updateSetting('backgroundImage', imagePath);
+    });
+
+    // 📁 文件选择按钮
+    const browseBtn = document.getElementById('btn-browse-image');
+    const fileInput = document.getElementById('file-bg-image');
+    
+    browseBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      fileInput.click();
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      // 检查是否是图片文件
+      if (!file.type.startsWith('image/')) {
+        alert('⚠️ 请选择图片文件！');
+        return;
+      }
+      
+      console.log('📁 已选择文件:', file.name, file.type);
+      
+      // 方法 1: 使用 file:// 协议（本地路径）
+      // 注意：Chrome 扩展可能无法直接访问文件系统路径
+      // const filePath = 'file://' + file.path; // file.path 在浏览器中不可用
+      
+      // 方法 2: 使用 FileReader 转换为 Data URL (推荐)
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const dataUrl = event.target.result;
+        console.log('✅ 已转换为 Data URL，大小:', Math.round(dataUrl.length / 1024), 'KB');
+        
+        // 更新输入框和设置
+        document.getElementById('input-bg-image').value = file.name; // 显示文件名
+        updateSetting('backgroundImage', dataUrl); // 保存 Data URL
+        
+        // 提示用户
+        if (dataUrl.length > 1000000) { // > 1MB
+          console.warn('⚠️ 图片较大，可能影响性能');
+        }
+      };
+      reader.onerror = () => {
+        alert('❌ 读取文件失败！');
+      };
+      reader.readAsDataURL(file); // 转换为 Base64 Data URL
     });
   }
 
@@ -326,7 +393,8 @@
       bgContainer.classList.add('hidden');
     }
 
-    document.getElementById('input-bg-image').value = s.backgroundImage || '';
+    document.getElementById('input-bg-image').value = s.backgroundImage ? 
+      (s.backgroundImage.startsWith('file://') ? s.backgroundImage.substring(7) : s.backgroundImage) : '';
 
     // 背景透明度滑块
     const bgOpacity = currentState.active
@@ -416,6 +484,21 @@
         // 确保 backgroundImage 存在 (防止旧版本无此字段)
         if (currentState.settings.backgroundImage === undefined) {
           currentState.settings.backgroundImage = DEFAULT_STATE.settings.backgroundImage;
+        }
+        
+        // 🔧 确保本地路径使用 file:// 协议
+        if (currentState.settings.backgroundImage) {
+          const imgPath = currentState.settings.backgroundImage;
+          if (!imgPath.startsWith('http://') && 
+              !imgPath.startsWith('https://') && 
+              !imgPath.startsWith('file://') &&
+              !imgPath.startsWith('data:') &&
+              !imgPath.startsWith('blob:') &&
+              (imgPath.startsWith('/') || /^[a-zA-Z]:/.test(imgPath))) {
+            currentState.settings.backgroundImage = 'file://' + imgPath;
+            console.log('✅ 已自动转换历史背景图路径为 file:// 协议');
+            saveState(); // 保存修正后的路径
+          }
         }
         // 确保 backgroundOpacity 存在 (兼容旧版本)
         if (currentState.settings.backgroundOpacityLight === undefined) {
