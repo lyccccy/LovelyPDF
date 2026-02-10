@@ -42,6 +42,49 @@
     color: #333;
 }
 
+.ai-header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.ai-clear-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    opacity: 0.6;
+    transition: all 0.2s;
+}
+
+.ai-clear-btn:hover {
+    opacity: 1;
+    background: rgba(255, 59, 48, 0.1);
+}
+
+.ai-sidebar-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    transition: all 0.2s;
+}
+
+.ai-sidebar-close:hover {
+    background: rgba(0,0,0,0.05);
+    color: #333;
+}
+
 /* 对话区域样式 - Cursor 风格 */
 .ai-chat-container {
     flex: 1;
@@ -73,6 +116,225 @@
     padding: 0 4px;
     color: #444;
     position: relative;
+}
+
+/* assistant-msg 是实际使用的类名 */
+.assistant-msg {
+    align-self: flex-start;
+    padding: 0 4px;
+    color: #444;
+    position: relative;
+}
+
+/* ============================================
+   Markdown 渲染样式
+   ============================================ */
+
+/* AI 消息中的 Markdown 元素 */
+.assistant-msg h1,
+.assistant-msg h2,
+.assistant-msg h3,
+.assistant-msg h4,
+.assistant-msg h5,
+.assistant-msg h6 {
+    margin: 12px 0 8px 0;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.assistant-msg h1 { font-size: 1.5em; }
+.assistant-msg h2 { font-size: 1.3em; }
+.assistant-msg h3 { font-size: 1.1em; }
+
+.assistant-msg p {
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+.assistant-msg code {
+    background: #f5f5f5;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #e83e8c;
+}
+
+.assistant-msg pre {
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 12px;
+    overflow-x: auto;
+    margin: 12px 0;
+}
+
+.assistant-msg pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-size: 0.85em;
+}
+
+.assistant-msg ul,
+.assistant-msg ol {
+    margin: 8px 0;
+    padding-left: 24px;
+}
+
+.assistant-msg li {
+    margin: 4px 0;
+}
+
+.assistant-msg blockquote {
+    border-left: 3px solid #0062fa;
+    padding-left: 12px;
+    margin: 12px 0;
+    color: #666;
+    font-style: italic;
+}
+
+.assistant-msg a {
+    color: #0062fa;
+    text-decoration: none;
+}
+
+.assistant-msg a:hover {
+    text-decoration: underline;
+}
+
+.assistant-msg table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 12px 0;
+    font-size: 0.9em;
+}
+
+.assistant-msg th,
+.assistant-msg td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.assistant-msg th {
+    background: #f5f5f5;
+    font-weight: 600;
+}
+
+.assistant-msg hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 16px 0;
+}
+
+.assistant-msg strong {
+    font-weight: 600;
+}
+
+.assistant-msg em {
+    font-style: italic;
+}
+
+/* 夜间模式下的 Markdown 样式 */
+body.custom-night-mode .assistant-msg code {
+    background: #333;
+    color: #ff79c6;
+}
+
+body.custom-night-mode .assistant-msg pre {
+    background: #2d2d2d;
+    border-color: #444;
+}
+
+body.custom-night-mode .assistant-msg blockquote {
+    border-left-color: #0078d4;
+    color: #aaa;
+}
+
+body.custom-night-mode .assistant-msg a {
+    color: #4dabf7;
+}
+
+body.custom-night-mode .assistant-msg th,
+body.custom-night-mode .assistant-msg td {
+    border-color: #444;
+}
+
+body.custom-night-mode .assistant-msg th {
+    background: #333;
+}
+
+body.custom-night-mode .assistant-msg hr {
+    border-top-color: #444;
+}
+
+/* 思考中动画 */
+.chat-message.thinking {
+    opacity: 1;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.thinking-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 32px;
+    line-height: 1;
+    color: #666;
+    font-weight: bold;
+}
+
+.thinking-dots span {
+    animation: thinking-blink 1.4s infinite ease-in-out;
+    opacity: 0.3;
+    display: inline-block;
+}
+
+.thinking-dots span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.thinking-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.thinking-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes thinking-blink {
+    0%, 20% {
+        opacity: 0.3;
+        transform: translateY(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 0.3;
+        transform: translateY(0);
+    }
+}
+
+/* 打字机效果光标（可选） */
+.assistant-msg.typing::after {
+    content: '▋';
+    animation: cursor-blink 1s infinite;
+    margin-left: 2px;
+    opacity: 0.8;
+}
+
+@keyframes cursor-blink {
+    0%, 49% {
+        opacity: 1;
+    }
+    50%, 100% {
+        opacity: 0;
+    }
 }
 
 /* 输入框区域 - 固定在底部 */
@@ -144,8 +406,9 @@ body.custom-night-mode #aiSidebar {
 
 body.custom-night-mode .ai-header-title,
 body.custom-night-mode .ai-msg,
+body.custom-night-mode .assistant-msg,
 body.custom-night-mode .user-msg {
-    color: #eee;
+    color: #eee !important;
 }
 
 body.custom-night-mode .ai-input-container {
@@ -155,6 +418,35 @@ body.custom-night-mode .ai-input-container {
 
 body.custom-night-mode #aiInput {
     color: #fff;
+}
+
+/* 夜间模式下的输入框占位符 */
+body.custom-night-mode #aiInput::placeholder {
+    color: #888;
+}
+
+/* 夜间模式下的按钮 */
+body.custom-night-mode #aiSendBtn {
+    color: #eee;
+}
+
+body.custom-night-mode #aiSendBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* 夜间模式下的清除按钮 */
+body.custom-night-mode .ai-clear-btn {
+    color: #eee;
+}
+
+/* 夜间模式下的关闭按钮 */
+body.custom-night-mode .ai-sidebar-close {
+    color: #eee;
+}
+
+/* 夜间模式下的思考动画 */
+body.custom-night-mode .thinking-dots {
+    color: #aaa;
 }
 
 /* ============================================
