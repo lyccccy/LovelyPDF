@@ -279,11 +279,7 @@ import { config } from './config.js';
         const messages = [
             { 
                 role: "system", 
-                content: `你是一个专业的 PDF 助手。以下是文档内容：
-
-${context}
-
-请根据文档内容回答用户的问题。如果问题与文档内容无关，请礼貌地提醒用户。`
+                content: `You are a professional pdf assistant, the pdf content is ${context}. Please answer the user's question based on the pdf content. If the question is not related to the pdf content, please politely remind the user.`
             },
             ...conversationHistory, // 📝 插入历史对话
             { 
@@ -491,7 +487,7 @@ ${context}
      * @param {number} maxPages - 最多提取多少页（默认从配置文件读取）
      * @returns {Promise<string>} - 返回提取的文本内容
      */
-    async function getPDFText(maxPages = config.PDF_MAX_PAGES) {
+    async function getPDFText(maxPages = config.PDF_MAX_PAGES) {//TODO: change the strategy when long context is provided
         try {
             // 获取 PDF.js 的应用实例
             const pdfApp = window.PDFViewerApplication;

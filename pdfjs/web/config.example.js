@@ -19,6 +19,10 @@ export const config = {
     MAX_TOKENS: 4000,
     
     // 温度参数（可选配置，0-2）
-    TEMPERATURE: 0.7
+    TEMPERATURE: 0.7,
+
+        // PDF 文本提取配置
+    PDF_MAX_PAGES: 10,        // 最多提取多少页
+    DF_MAX_CHARS: 20000      // 最多保留多少字符（约 5000 tokens）
 };
 
