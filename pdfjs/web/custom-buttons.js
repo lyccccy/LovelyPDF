@@ -17,6 +17,7 @@
       invert: 0, // %
       hue: 0, // deg
       hue: 0, // deg
+      enableBackground: false, // Default disabled
       backgroundImage: 'assets/background_img/pexels-padrinan-255379.jpg', // Default background
       backgroundOpacityLight: 0.8, // 0 to 1 (Light Mode)
       backgroundOpacityDark: 0.4   // 0 to 1 (Night Mode)
@@ -95,14 +96,24 @@
             <input type="range" id="slider-hue" min="0" max="360" value="0">
             <span class="value" id="val-hue">0°</span>
           </div>
-          <div class="setting-row full-width">
-            <label>背景图片 (URL/Path)</label>
-            <input type="text" id="input-bg-image" placeholder="输入图片地址">
-          </div>
+          
+          <div class="menu-separator" style="margin: 12px 0;"></div>
+          
           <div class="setting-row">
-            <label>背景亮度 (Opacity)</label>
-            <input type="range" id="slider-bg-opacity" min="0" max="100" value="50">
-            <span class="value" id="val-bg-opacity">50%</span>
+            <label style="width: auto; flex: 1;">启用背景图片</label>
+            <input type="checkbox" id="check-enable-bg" style="flex: 0;">
+          </div>
+
+          <div id="bg-settings-container" class="hidden">
+            <div class="setting-row full-width">
+              <label>背景图片 (URL/Path)</label>
+              <input type="text" id="input-bg-image" placeholder="输入图片地址">
+            </div>
+            <div class="setting-row">
+              <label>背景亮度 (Opacity)</label>
+              <input type="range" id="slider-bg-opacity" min="0" max="100" value="50">
+              <span class="value" id="val-bg-opacity">50%</span>
+            </div>
           </div>
         </div>
         <div class="settings-footer">
@@ -194,6 +205,19 @@
       });
     });
 
+    // 背景图片开关
+    const bgCheck = document.getElementById('check-enable-bg');
+    bgCheck.addEventListener('change', (e) => {
+      updateSetting('enableBackground', e.target.checked);
+      // 更新可见性
+      const container = document.getElementById('bg-settings-container');
+      if (e.target.checked) {
+        container.classList.remove('hidden');
+      } else {
+        container.classList.add('hidden');
+      }
+    });
+
     // 背景透明度滑块
     const bgOpacitySlider = document.getElementById('slider-bg-opacity');
     bgOpacitySlider.addEventListener('input', (e) => {
@@ -223,10 +247,11 @@
     currentState.type = type;
 
     if (PRESETS[type]) {
-      // 保留全局设置 (背景图片和背景透明度)
+      // 保留全局设置
       const currentBgImage = currentState.settings.backgroundImage;
       const currentBgOpacityLight = currentState.settings.backgroundOpacityLight;
       const currentBgOpacityDark = currentState.settings.backgroundOpacityDark;
+      const currentEnableBg = currentState.settings.enableBackground;
 
       currentState.settings = { ...PRESETS[type] };
 
@@ -234,6 +259,7 @@
       currentState.settings.backgroundImage = currentBgImage;
       currentState.settings.backgroundOpacityLight = currentBgOpacityLight !== undefined ? currentBgOpacityLight : 0.8;
       currentState.settings.backgroundOpacityDark = currentBgOpacityDark !== undefined ? currentBgOpacityDark : 0.4;
+      currentState.settings.enableBackground = currentEnableBg !== undefined ? currentEnableBg : false;
     }
 
     applyState();
@@ -244,8 +270,7 @@
 
   function updateSetting(key, value) {
     // 一旦手动调整，切换到自定义模式
-    // 注意：调整背景设置不应自动切换到自定义模式，除非这是用户期望的。
-    const backgroundKeys = ['backgroundImage', 'backgroundOpacityLight', 'backgroundOpacityDark'];
+    const backgroundKeys = ['backgroundImage', 'backgroundOpacityLight', 'backgroundOpacityDark', 'enableBackground'];
     if (!backgroundKeys.includes(key)) {
       if (currentState.type !== 'custom') {
         currentState.type = 'custom';
@@ -291,6 +316,16 @@
     document.getElementById('slider-hue').value = s.hue;
     document.getElementById('val-hue').textContent = s.hue + '°';
 
+    // 背景开关及显示状态
+    const enableBg = s.enableBackground || false;
+    document.getElementById('check-enable-bg').checked = enableBg;
+    const bgContainer = document.getElementById('bg-settings-container');
+    if (enableBg) {
+      bgContainer.classList.remove('hidden');
+    } else {
+      bgContainer.classList.add('hidden');
+    }
+
     document.getElementById('input-bg-image').value = s.backgroundImage || '';
 
     // 背景透明度滑块
@@ -312,7 +347,7 @@
     body.classList.remove('night-mode-invert', 'night-mode-dim');
 
     // === 1. 处理背景图片 (全局生效，独立于夜间模式) ===
-    if (s.backgroundImage) {
+    if (s.enableBackground && s.backgroundImage) {
       body.classList.add('has-custom-background');
       root.style.setProperty('--pdf-background-image', `url('${s.backgroundImage}')`);
 
@@ -389,6 +424,9 @@
         }
         if (currentState.settings.backgroundOpacityDark === undefined) {
           currentState.settings.backgroundOpacityDark = currentState.settings.backgroundOpacity !== undefined ? currentState.settings.backgroundOpacity : 0.4;
+        }
+        if (currentState.settings.enableBackground === undefined) {
+          currentState.settings.enableBackground = false;
         }
         // 清理旧字段
         delete currentState.settings.backgroundOpacity;
