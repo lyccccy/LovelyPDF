@@ -82,7 +82,25 @@
 
     function toggleSidebar() {
         const outerContainer = document.getElementById('outerContainer');
-        outerContainer.classList.toggle('aiSidebarOpen');
+        const viewerContainer = document.getElementById('viewerContainer');
+        const sidebar = document.getElementById('aiSidebar');
+        
+        const isOpen = outerContainer.classList.toggle('aiSidebarOpen');
+        
+        if (isOpen) {
+            // 获取当前定义的 CSS 变量值
+            const currentWidth = parseInt(getComputedStyle(sidebar).width);
+            viewerContainer.style.paddingRight = `${currentWidth + 24}px`;
+        } else {
+            viewerContainer.style.paddingRight = '0px';
+        }
+    
+        // 延时等待 CSS 过渡结束后重新计算 PDF 布局
+        setTimeout(() => {
+            if (window.PDFViewerApplication) {
+                window.PDFViewerApplication.eventBus.dispatch('resize', { source: window });
+            }
+        }, 310);
     }
 
     function closeSidebar() {
@@ -134,23 +152,54 @@
         const sidebar = document.getElementById('aiSidebar');
         const resizer = sidebar.querySelector('.sidebarResizer');
         const outerContainer = document.getElementById('outerContainer');
+        const viewerContainer = document.getElementById('viewerContainer');
+    
         let isResizing = false;
-
+    
         resizer.addEventListener('mousedown', (e) => {
             isResizing = true;
-            document.addEventListener('mousemove', resize);
-            document.addEventListener('mouseup', () => {
-                isResizing = false;
-                document.removeEventListener('mousemove', resize);
-            });
+            // 增加类名以禁用过渡动画（防止拖拽滞后）和文本选择
+            outerContainer.classList.add('aiSidebarResizing');
+            document.body.style.cursor = 'ew-resize';
+    
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', stopResizing);
+            e.preventDefault();
         });
-
-        function resize(e) {
+    
+        function handleMouseMove(e) {
             if (!isResizing) return;
-            let newWidth = window.innerWidth - e.clientX;
-            newWidth = Math.max(250, Math.min(newWidth, window.innerWidth * 0.6));
+    
+            // 计算新宽度：屏幕宽度 - 当前鼠标位置 - 右边距(如果有)
+            // 因为侧边栏是固定在右边的，所以鼠标越往左移，宽度越大
+            let newWidth = window.innerWidth - e.clientX - 12; // 12 是我们在 CSS 中设置的 right 边距
+    
+            // 限制最小和最大宽度
+            const minWidth = 250;
+            const maxWidth = window.innerWidth * 0.6;
+            newWidth = Math.max(minWidth, Math.min(newWidth, maxWidth));
+    
+            // 1. 更新侧边栏宽度
             sidebar.style.width = `${newWidth}px`;
             sidebar.style.setProperty('--sidebar-width', `${newWidth}px`);
+    
+            // 2. 更新 PDF 容器的右内边距，确保滚动条靠边但内容不被遮挡
+            // 这里 +24 是为了留出侧边栏两边的间隙感
+            viewerContainer.style.paddingRight = `${newWidth + 24}px`;
+    
+            // 3. 实时通知 PDF.js 调整页面缩放（解决 PDF 内容偏移）
+            if (window.PDFViewerApplication) {
+                window.PDFViewerApplication.eventBus.dispatch('resize', { source: window });
+            }
+        }
+    
+        function stopResizing() {
+            if (!isResizing) return;
+            isResizing = false;
+            outerContainer.classList.remove('aiSidebarResizing');
+            document.body.style.cursor = 'default';
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', stopResizing);
         }
     }
 

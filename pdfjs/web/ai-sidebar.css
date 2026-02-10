@@ -156,3 +156,129 @@ body.custom-night-mode .ai-input-container {
 body.custom-night-mode #aiInput {
     color: #fff;
 }
+
+/* ============================================
+   AI 按钮样式（工具栏中的按钮）
+   ============================================ */
+
+#viewAI {
+    position: relative;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* 隐藏默认的 before 伪元素 - 这是黑框的原因！ */
+#viewAI::before {
+    display: none !important;
+    content: none !important;
+}
+
+/* AI 图标样式 */
+#viewAI svg {
+    width: 18px !important;
+    height: 18px !important;
+    display: block !important;
+    fill: currentColor !important;
+}
+
+/* 夜间模式下图标颜色 */
+body.custom-night-mode #viewAI svg {
+    fill: #e0e0e0 !important;
+}
+
+/* AI 标签 */
+#viewAI::after {
+    content: "AI";
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    font-size: 7px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2px 3px;
+    border-radius: 3px;
+    line-height: 1;
+    pointer-events: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================
+   侧边栏拖动条样式
+   ============================================ */
+
+
+
+/* ============================================
+   推动 viewerContainer 的样式
+   ============================================ */
+
+/* 1. 修改 viewerContainer 的定位逻辑 */
+
+
+/* 2. 当两个侧边栏同时打开时 */
+#outerContainer.viewsManagerOpen.aiSidebarOpen #viewerContainer:not(.pdfPresentationMode) {
+    left: var(--viewsManager-width, 230px);
+    right: 0 !important;
+    padding-right: calc(var(--sidebar-width) + 12px);
+}
+
+/* 3. 确保 AI 侧边栏浮动在最上层 */
+/* 侧边栏基础样式 */
+#aiSidebar {
+    --sidebar-width: 320px;
+    position: absolute;
+    top: calc(var(--toolbar-height) + 12px);
+    right: -500px; /* 初始隐藏在右侧 */
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--toolbar-height) - 24px);
+    z-index: 101; /* 确保在滚动条上方或作为独立层 */
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+/* 激活状态 */
+#outerContainer.aiSidebarOpen #aiSidebar {
+    right: 12px;
+}
+
+/* 修复滚动条：PDF 容器永远占满宽度，但内容向内缩进 */
+#viewerContainer {
+    right: 0 !important; /* 强制设为0，滚动条就会贴在最右边 */
+    transition: padding-right 0.3s ease;
+}
+
+#outerContainer.aiSidebarOpen #viewerContainer:not(.pdfPresentationMode) {
+    /* 为侧边栏预留空间：宽度 + 左右间距 */
+    padding-right: calc(var(--sidebar-width) + 24px);
+}
+
+/* 拖拽时禁用平滑过渡，否则拖拽会感觉到严重的延迟 */
+#outerContainer.aiSidebarResizing #viewerContainer,
+#outerContainer.aiSidebarResizing #aiSidebar {
+    transition: none !important;
+}
+
+/* 拖拽条手感优化 */
+#aiSidebar .sidebarResizer {
+    position: absolute;
+    left: -4px; /* 稍微往外扩一点，方便鼠标抓取 */
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    cursor: ew-resize;
+    z-index: 102;
+    background: transparent;
+}
+
+#aiSidebar .sidebarResizer:hover {
+    background: linear-gradient(to right, transparent, var(--accent-color, #0062fa), transparent);
+}
