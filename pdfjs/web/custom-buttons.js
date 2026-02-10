@@ -186,7 +186,7 @@
     currentState.active = !currentState.active;
     applyState();
     saveState();
-    showNotification(currentState.active ? '🌙 已开启' + getModeName(currentState.type) : '☀️ 已关闭夜间模式');
+    // showNotification(currentState.active ? '🌙 已开启' + getModeName(currentState.type) : '☀️ 已关闭夜间模式');
   }
 
   function setNightModeType(type) {
@@ -200,7 +200,7 @@
     applyState();
     saveState();
     updateSliders();
-    showNotification('已切换至 ' + getModeName(type));
+    // showNotification('已切换至 ' + getModeName(type));
   }
 
   function updateSetting(key, value) {
