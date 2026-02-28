@@ -206,7 +206,39 @@ import { config } from './config.js';
                 msgDiv.className = `chat-message ${msg.role}-msg`;
                 
                 if (msg.role === 'assistant' && window.marked) {
-                    msgDiv.innerHTML = marked.parse(msg.content);
+                    // 🔒 保护 LaTeX 公式 - 使用HTML注释作为占位符（不会被Markdown解析）
+                    const mathPlaceholders = [];
+                    let protectedContent = msg.content;
+                    
+                    // 保护 $$ ... $$ (块级公式)
+                    protectedContent = protectedContent.replace(/\$\$([\s\S]+?)\$\$/g, (match) => {
+                        const index = mathPlaceholders.length;
+                        mathPlaceholders.push({ type: 'display', content: match });
+                        return `<!--MATHD${index}-->`;
+                    });
+                    
+                    // 保护 $ ... $ (行内公式)
+                    protectedContent = protectedContent.replace(/\$([^\$\n]+?)\$/g, (match) => {
+                        const index = mathPlaceholders.length;
+                        mathPlaceholders.push({ type: 'inline', content: match });
+                        return `<!--MATHI${index}-->`;
+                    });
+                    
+                    // 🎨 渲染 Markdown
+                    let htmlContent = marked.parse(protectedContent);
+                    
+                    // 🔓 恢复 LaTeX 公式占位符
+                    mathPlaceholders.forEach((math, index) => {
+                        if (math.type === 'display') {
+                            const placeholder = `<!--MATHD${index}-->`;
+                            htmlContent = htmlContent.split(placeholder).join(math.content);
+                        } else {
+                            const placeholder = `<!--MATHI${index}-->`;
+                            htmlContent = htmlContent.split(placeholder).join(math.content);
+                        }
+                    });
+                    
+                    msgDiv.innerHTML = htmlContent;
                     
                     // 🧮 渲染数学公式
                     if (window.renderMathInElement) {
@@ -476,74 +508,132 @@ import { config } from './config.js';
     
         console.log('✅ 收到 API 响应，等待第一个字...');
     
-        // 处理流式数据 - 打字机效果
+        // 处理流式数据 - 实时渲染 Markdown 和公式
         const reader = response.body.getReader();
         const decoder = new TextDecoder("utf-8");
         let fullContent = "";
-        let displayBuffer = ""; // 用于打字机效果的缓冲区
-        let isTyping = false;
+        let displayedLength = 0; // 已显示的字符数
         let isFirstChar = true; // 标记是否是第一个字符
-        let isStreamFinished = false; // 标记流是否结束
+        let lastRenderTime = 0; // 上次渲染时间
+        let isRendering = false; // 是否正在渲染中
     
-        // 🚀 自适应速度的打字机效果函数
-        const typeWriter = () => {
-            if (displayBuffer.length > 0 && !isTyping) {
-                isTyping = true;
-                
-                // 💡 第一个字符时移除思考动画
+        // 🎨 渲染当前内容的函数（带 Markdown 和 KaTeX）
+        const renderContent = () => {
+            if (isRendering) return; // 避免重复渲染
+            isRendering = true;
+            
+            try {
+                // 💡 第一次渲染时移除思考动画
                 if (isFirstChar) {
                     displayElement.classList.remove('thinking');
                     displayElement.innerHTML = '';
-                    displayElement.innerText = '';
                     isFirstChar = false;
-                    console.log('✨ 开始显示第一个字，移除思考动画');
+                    console.log('✨ 开始显示内容，移除思考动画');
                 }
                 
-                const char = displayBuffer.charAt(0);
-                displayBuffer = displayBuffer.substring(1);
+                // 获取当前应该显示的内容
+                const contentToShow = fullContent.substring(0, displayedLength);
                 
-                // 更新显示内容
-                displayElement.innerText += char;
+                if (window.marked && contentToShow) {
+                    // 🔒 保护 LaTeX 公式 - 使用HTML注释作为占位符（不会被Markdown解析）
+                    const mathPlaceholders = [];
+                    let protectedContent = contentToShow;
+                    
+                    // 保护 $$ ... $$ (块级公式)
+                    protectedContent = protectedContent.replace(/\$\$([\s\S]+?)\$\$/g, (match) => {
+                        const index = mathPlaceholders.length;
+                        mathPlaceholders.push({ type: 'display', content: match });
+                        return `<!--MATHD${index}-->`;
+                    });
+                    
+                    // 保护 $ ... $ (行内公式)
+                    protectedContent = protectedContent.replace(/\$([^\$\n]+?)\$/g, (match) => {
+                        const index = mathPlaceholders.length;
+                        mathPlaceholders.push({ type: 'inline', content: match });
+                        return `<!--MATHI${index}-->`;
+                    });
+                    
+                    // 🎨 渲染 Markdown
+                    let htmlContent = marked.parse(protectedContent);
+                    
+                    // 🔓 恢复 LaTeX 公式占位符
+                    mathPlaceholders.forEach((math, index) => {
+                        if (math.type === 'display') {
+                            const placeholder = `<!--MATHD${index}-->`;
+                            htmlContent = htmlContent.split(placeholder).join(math.content);
+                        } else {
+                            const placeholder = `<!--MATHI${index}-->`;
+                            htmlContent = htmlContent.split(placeholder).join(math.content);
+                        }
+                    });
+                    
+                    displayElement.innerHTML = htmlContent;
+                    
+                    // 🧮 渲染数学公式 (KaTeX)
+                    if (window.renderMathInElement) {
+                        try {
+                            renderMathInElement(displayElement, {
+                                delimiters: [
+                                    {left: '$$', right: '$$', display: true},
+                                    {left: '$', right: '$', display: false},
+                                    {left: '\\[', right: '\\]', display: true},
+                                    {left: '\\(', right: '\\)', display: false}
+                                ],
+                                throwOnError: false,
+                                errorColor: '#cc0000'
+                            });
+                        } catch (mathErr) {
+                            console.error('❌ 数学公式渲染失败:', mathErr);
+                        }
+                    }
+                } else {
+                    displayElement.innerText = contentToShow;
+                }
                 
                 // 自动滚动到底部
                 const container = document.getElementById('aiChatContainer');
                 container.scrollTop = container.scrollHeight;
                 
-                // 🎯 动态调整打字速度：根据缓冲区大小自适应
-                let delay;
-                const bufferSize = displayBuffer.length;
-                
-                if (bufferSize > 50) {
-                    // 缓冲区很大，加速打字
-                    delay = char === '\n' ? 2 : (char.match(/[，。！？,.!?]/) ? 10 : 5);
-                } else if (bufferSize > 20) {
-                    // 缓冲区较大，中速打字
-                    delay = char === '\n' ? 5 : (char.match(/[，。！？,.!?]/) ? 30 : 15);
-                } else if (bufferSize > 5) {
-                    // 缓冲区适中，正常速度
-                    delay = char === '\n' ? 10 : (char.match(/[，。！？,.!?]/) ? 50 : 25);
-                } else {
-                    // 缓冲区较小，慢速打字（更有打字机感觉）
-                    delay = char === '\n' ? 10 : (char.match(/[，。！？,.!?]/) ? 100 : 40);
-                }
-                
-                setTimeout(() => {
-                    isTyping = false;
-                    typeWriter();
-                }, delay);
-            } else if (isStreamFinished && displayBuffer.length === 0) {
-                // 流结束且缓冲区清空，停止打字机
-                return;
+            } finally {
+                isRendering = false;
             }
         };
+        
+        // 🚀 打字机效果：逐字增加显示长度并渲染
+        const typingInterval = setInterval(() => {
+            if (displayedLength < fullContent.length) {
+                const now = Date.now();
+                
+                // 🎯 动态速度：根据缓冲区大小调整
+                const remaining = fullContent.length - displayedLength;
+                let charsToAdd = 1;
+                
+                if (remaining > 100) {
+                    charsToAdd = 5; // 缓冲区很大，快速显示
+                } else if (remaining > 50) {
+                    charsToAdd = 3; // 缓冲区中等，中速显示
+                } else if (remaining > 20) {
+                    charsToAdd = 2; // 缓冲区较小，正常速度
+                } else {
+                    charsToAdd = 1; // 接近结束，慢速显示
+                }
+                
+                displayedLength = Math.min(displayedLength + charsToAdd, fullContent.length);
+                
+                // 🎨 每 50ms 或缓冲区很大时渲染一次（避免过于频繁）
+                const shouldRender = (now - lastRenderTime > 50) || (remaining > 100);
+                
+                if (shouldRender) {
+                    renderContent();
+                    lastRenderTime = now;
+                }
+            }
+        }, 30); // 每 30ms 检查一次
 
-        // 启动打字机效果
-        const typingInterval = setInterval(typeWriter, 10); // 更频繁地检查
-
+        // 📥 接收流式数据
         while (true) {
             const { done, value } = await reader.read();
             if (done) {
-                isStreamFinished = true;
                 break;
             }
     
@@ -558,65 +648,23 @@ import { config } from './config.js';
                     const parsed = JSON.parse(message);
                     const content = parsed.choices[0].delta.content || "";
                     fullContent += content;
-                    displayBuffer += content; // 添加到打字机缓冲区
                 } catch (e) {
                     // 忽略非 JSON 行
                 }
             }
         }
 
-        // 等待打字机效果完成
-        while (displayBuffer.length > 0 || isTyping) {
+        // 等待打字机效果显示完所有内容
+        while (displayedLength < fullContent.length) {
             await new Promise(resolve => setTimeout(resolve, 50));
         }
         
+        // 最后渲染一次确保完整显示
+        renderContent();
+        
         clearInterval(typingInterval);
-
-        // 🎨 打字完成后，将纯文本转换为 Markdown 渲染
-        console.log('🔍 检查 Markdown 渲染条件:', {
-            'window.marked': !!window.marked,
-            'fullContent': fullContent.substring(0, 100) + '...',
-            'fullContent.length': fullContent.length
-        });
-
-        if (window.marked && fullContent) {
-            try {
-                const htmlContent = marked.parse(fullContent);
-                displayElement.innerHTML = htmlContent;
-                console.log('✨ Markdown 渲染完成');
-                console.log('📝 渲染后的 HTML 长度:', htmlContent.length);
-                
-                // 🧮 渲染数学公式 (KaTeX)
-                if (window.renderMathInElement) {
-                    try {
-                        renderMathInElement(displayElement, {
-                            delimiters: [
-                                {left: '$$', right: '$$', display: true},   // 块级公式
-                                {left: '$', right: '$', display: false},    // 行内公式
-                                {left: '\\[', right: '\\]', display: true}, // LaTeX 块级
-                                {left: '\\(', right: '\\)', display: false} // LaTeX 行内
-                            ],
-                            throwOnError: false,
-                            errorColor: '#cc0000'
-                        });
-                        console.log('🧮 数学公式渲染完成');
-                    } catch (mathErr) {
-                        console.error('❌ 数学公式渲染失败:', mathErr);
-                    }
-                } else {
-                    console.warn('⚠️ KaTeX 未加载，跳过数学公式渲染');
-                }
-            } catch (err) {
-                console.error('❌ Markdown 渲染失败:', err);
-                console.error('错误详情:', err.message);
-                // 如果渲染失败，保持原始文本
-            }
-        } else {
-            console.warn('⚠️ Markdown 未渲染:', {
-                'marked 加载': !!window.marked,
-                '内容存在': !!fullContent
-            });
-        }
+        
+        console.log('✅ 打字机效果完成，已实时渲染 Markdown 和数学公式');
 
         // 💾 将本轮对话添加到历史记录
         conversationHistory.push(
