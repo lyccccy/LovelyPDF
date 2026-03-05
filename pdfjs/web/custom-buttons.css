@@ -210,18 +210,21 @@ body.custom-night-mode #toolbarViewerMiddle {
 /* 工具栏按钮 - 柔和文字颜色 */
 body.custom-night-mode .toolbarButton {
   background-color: transparent !important;
-  color: #c0c0c0 !important;
-  /* 从 #e0e0e0 调暗 */
+  color: #e0e0e0 !important;
 }
 
 body.custom-night-mode .toolbarButton:hover {
   background-color: rgba(255, 255, 255, 0.08) !important;
-  /* 降低悬停对比度 */
 }
 
+/* PDF.js 图标通过 ::before + mask-image + background-color 渲染
+   夜间模式下将图标色改为亮色，使其在深色工具栏上可见 */
 body.custom-night-mode .toolbarButton::before {
-  filter: invert(0.85) !important;
-  /* 从 invert(1) 调暗 */
+  background-color: rgb(220, 220, 220) !important;
+}
+
+body.custom-night-mode .toolbarButton.toggled::before {
+  background-color: rgb(255, 255, 255) !important;
 }
 
 /* 工具栏输入框和选择框 - 柔和配色 */
@@ -733,16 +736,13 @@ body.custom-night-mode select:disabled {
   /* 从 #666 调亮 */
 }
 
-/* 输入框、选择框、按钮通用样式 - 柔和配色 */
+/* 输入框、选择框通用样式 - 柔和配色 */
+/* 注意：button 不在此处，避免覆盖工具栏图标按钮的透明背景 */
 body.custom-night-mode input,
-body.custom-night-mode select,
-body.custom-night-mode button {
+body.custom-night-mode select {
   background-color: #4a4a4a !important;
-  /* 从 #3a3a3a 调亮 */
   color: #c0c0c0 !important;
-  /* 从 #e0e0e0 调暗 */
   border-color: #5a5a5a !important;
-  /* 从 #4a4a4a 调亮 */
 }
 
 body.custom-night-mode input:focus,
