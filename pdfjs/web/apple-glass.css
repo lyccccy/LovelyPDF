@@ -65,33 +65,128 @@ body.has-custom-background {
     /* When custom bg is used, let it show through */
 }
 
-/* Make containers transparent so the body background shows */
-#outerContainer,
-#mainContainer,
+/* Make containers transparent and fill the screen */
+#outerContainer {
+    background: transparent !important;
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+}
+
+#mainContainer {
+    background: transparent !important;
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+}
+
+/* Force PDF Container to start from absolute top but pad for the floating toolbar */
 #viewerContainer {
     background: transparent !important;
+    position: absolute !important;
+    top: 0 !important;
+    /* Start from the very top of the window */
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    overflow-y: auto !important;
+    padding-top: 80px !important;
+    /* Prevent initial page hiding behind toolbar */
+}
+
+#viewer {
+    padding-bottom: 40px !important;
 }
 
 /* =========================================
    Toolbars - Top Glass Bar
    ========================================= */
 
-.toolbar,
-#toolbarContainer,
-#toolbarViewer {
+.toolbar {
     background: var(--glass-bg-light) !important;
     backdrop-filter: var(--glass-blur) !important;
     -webkit-backdrop-filter: var(--glass-blur) !important;
-    border-bottom: 1px solid var(--glass-border-light) !important;
-    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid var(--glass-border-light) !important;
+    border-radius: 24px !important;
+    /* Heavily rounded corners for the floating look */
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.05) !important;
+
+    /* Make it float */
+    position: fixed !important;
+    top: 16px !important;
+    left: 12.5% !important;
+    /* Centered 75% width */
+    width: 75% !important;
+    height: 48px !important;
+    /* Explicit height */
+    z-index: 10000 !important;
+    /* Ensure it stays above everything */
+    padding: 0 16px !important;
+    /* Inner padding */
+    box-sizing: border-box !important;
+
+    /* Disconnect completely from standard PDF layout */
+    margin: 0 !important;
+    max-width: none !important;
+
+    /* Center inner contents vertically */
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
 }
 
-body.custom-night-mode .toolbar,
+/* Reset inner containers so they don't duplicate the glass effect window */
+#toolbarContainer,
+#toolbarViewer,
+#toolbarViewerLeft,
+#toolbarViewerMiddle,
+#toolbarViewerRight {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+#toolbarContainer {
+    width: 100% !important;
+}
+
+#toolbarViewer {
+    width: 100% !important;
+    justify-content: space-between !important;
+}
+
+body.custom-night-mode .toolbar {
+    background: var(--glass-bg-dark) !important;
+    border: 1px solid var(--glass-border-dark) !important;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
 body.custom-night-mode #toolbarContainer,
 body.custom-night-mode #toolbarViewer {
-    background: var(--glass-bg-dark) !important;
-    border-bottom: 1px solid var(--glass-border-dark) !important;
-    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.5) !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 /* Top Toolbar Buttons */
@@ -114,25 +209,63 @@ body.custom-night-mode .toolbarButton:hover {
     background: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Secondary Toolbar (Tools Menu) */
+/* Adjust secondary toolbar toggle to line up with the floating bar */
+#secondaryToolbarToggle {
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Universal Sub-Menus (Tools, Views, Params) */
+.menu,
+.popupMenu,
 #secondaryToolbar,
+.editorParamsToolbar,
 .doorHanger,
 .doorHangerRight {
     background: var(--glass-bg-light) !important;
     backdrop-filter: var(--glass-blur) !important;
     -webkit-backdrop-filter: var(--glass-blur) !important;
     border: 1px solid var(--glass-border-light) !important;
-    border-radius: 12px !important;
-    box-shadow: var(--glass-shadow) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15) !important;
     padding: 8px !important;
-    margin-top: 6px !important;
+    margin-top: 16px !important;
+    color: var(--apple-text-light) !important;
 }
 
+/* Ensure Inner Menu Containers are transparent to avoid double backgrounds */
+.menuContainer {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Specific position adjustments for Secondary Toolbar */
+#secondaryToolbar {
+    position: fixed !important;
+    top: 70px !important;
+    /* Float just below the toolbar */
+    right: 12.5% !important;
+    /* Align to the right edge of the 75% toolbar */
+}
+
+/* Findbar adjustments for floating toolbar */
+#findbar {
+    top: 70px !important;
+    left: 14% !important;
+    /* Roughly line up with the search button */
+    right: auto !important;
+}
+
+body.custom-night-mode .menu,
+body.custom-night-mode .popupMenu,
 body.custom-night-mode #secondaryToolbar,
+body.custom-night-mode .editorParamsToolbar,
 body.custom-night-mode .doorHanger,
 body.custom-night-mode .doorHangerRight {
     background: var(--glass-bg-dark) !important;
     border: 1px solid var(--glass-border-dark) !important;
+    color: var(--apple-text-dark) !important;
 }
 
 /* Secondary tools buttons */
@@ -181,21 +314,34 @@ input.toolbarField:focus {
    Sidebar (Left Document Outline/Thumbs)
    ========================================= */
 
-#sidebarContainer {
+/* Left Sidebar (#viewsManager) */
+#viewsManager.sidebar {
     background: var(--glass-bg-light) !important;
     backdrop-filter: var(--glass-blur) !important;
     -webkit-backdrop-filter: var(--glass-blur) !important;
     border-right: 1px solid var(--glass-border-light) !important;
     box-shadow: 1px 0 10px rgba(0, 0, 0, 0.05) !important;
+
+    /* Disconnect from the 75% wide floating toolbar and snap it back to the screen's left edge */
+    position: fixed !important;
+    top: 70px !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    height: calc(100vh - 70px) !important;
+    border-radius: 0 16px 16px 0 !important;
+    z-index: 9998 !important;
 }
 
-body.custom-night-mode #sidebarContainer {
+body.custom-night-mode #viewsManager.sidebar {
     background: var(--glass-bg-dark) !important;
     border-right: 1px solid var(--glass-border-dark) !important;
 }
 
-#sidebarContent {
+#sidebarContent,
+#viewsManagerContent {
     background: transparent !important;
+    padding-top: 16px !important;
+    /* Safe padding for inside the sidebar */
 }
 
 /* Thumbnails */
@@ -306,10 +452,11 @@ body.custom-night-mode ::-webkit-scrollbar-thumb:hover {
     backdrop-filter: var(--glass-blur) !important;
     -webkit-backdrop-filter: var(--glass-blur) !important;
     border: 1px solid var(--glass-border-light) !important;
-    border-radius: 12px !important;
-    box-shadow: var(--glass-shadow) !important;
-    padding: 8px 12px !important;
-    top: 50px !important;
+    border-radius: 16px !important;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15) !important;
+    padding: 12px 16px !important;
+
+    /* The position overrides are handled higher up in the file alongside .doorHanger */
 }
 
 body.custom-night-mode #findbar {

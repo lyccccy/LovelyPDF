@@ -10,9 +10,11 @@
 
     display: flex;
     flex-direction: column;
-    height: calc(100vh - var(--toolbar-height) - 24px);
-    position: absolute;
-    top: calc(var(--toolbar-height) + 12px);
+    height: calc(100vh - 86px);
+    /* 100vh - 70px top offset - 16px bottom margin */
+    position: fixed;
+    top: 70px;
+    /* Adjust for floating toolbar + margin (16px + 48px + 6px) */
     right: -400px;
     /* 隐藏位置 */
     width: var(--sidebar-width);
@@ -811,12 +813,12 @@ body.custom-night-mode #viewAI svg {
 /* 侧边栏基础样式 */
 #aiSidebar {
     --sidebar-width: 320px;
-    position: absolute;
-    top: calc(var(--toolbar-height) + 12px);
+    position: fixed;
+    top: 70px;
     right: -500px;
     /* 初始隐藏在右侧 */
     width: var(--sidebar-width);
-    height: calc(100vh - var(--toolbar-height) - 24px);
+    height: calc(100vh - 86px);
     z-index: 101;
     /* 确保在滚动条上方或作为独立层 */
     background: var(--sidebar-bg);
