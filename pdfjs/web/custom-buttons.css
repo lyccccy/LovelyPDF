@@ -245,20 +245,20 @@ body.custom-night-mode #numPages {
 }
 
 :root {
-  --ui-bg: #ffffff;
-  --ui-text: #333333;
-  --ui-border: #e0e0e0;
-  --ui-hover: #f5f5f5;
-  --ui-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --ui-accent: #2196f3;
+  --ui-bg: var(--glass-bg-light, rgba(255, 255, 255, 0.7));
+  --ui-text: var(--apple-text-light, #1d1d1f);
+  --ui-border: var(--glass-border-light, rgba(255, 255, 255, 0.5));
+  --ui-hover: rgba(0, 0, 0, 0.05);
+  --ui-shadow: var(--glass-shadow, 0 8px 32px rgba(0, 0, 0, 0.15));
+  --ui-accent: var(--apple-blue, #0A84FF);
 }
 
 body.custom-night-mode {
-  --ui-bg: rgba(45, 45, 45, 0.95);
-  --ui-text: #e0e0e0;
-  --ui-border: #444;
-  --ui-hover: #3d3d3d;
-  --ui-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --ui-bg: var(--glass-bg-dark, rgba(28, 28, 30, 0.7));
+  --ui-text: var(--apple-text-dark, #f5f5f7);
+  --ui-border: var(--glass-border-dark, rgba(255, 255, 255, 0.1));
+  --ui-hover: rgba(255, 255, 255, 0.1);
+  --ui-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   --ui-accent: #64b5f6;
 }
 
@@ -285,9 +285,9 @@ body.custom-night-mode #viewer .page canvas {
   padding: 8px 0;
   z-index: 1000;
   margin-top: 8px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: var(--glass-blur, blur(20px) saturate(180%));
   /* 毛玻璃效果 */
-  -webkit-backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: var(--glass-blur, blur(20px) saturate(180%));
 }
 
 .menu-item {
@@ -345,8 +345,8 @@ body.custom-night-mode #viewer .page canvas {
   display: flex;
   flex-direction: column;
   color: var(--ui-text);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: var(--glass-blur, blur(20px) saturate(180%));
+  -webkit-backdrop-filter: var(--glass-blur, blur(20px) saturate(180%));
 }
 
 .night-mode-settings.hidden {

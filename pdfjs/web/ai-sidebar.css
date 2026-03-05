@@ -1,22 +1,27 @@
 /* AI Sidebar 基础结构重塑 */
 #aiSidebar {
-    --sidebar-width: 320px; /* 稍微宽一点更有对话感 */
-    --sidebar-bg: #ffffff;
-    --chat-user-bg: #f4f4f4;
+    --sidebar-width: 320px;
+    /* 稍微宽一点更有对话感 */
+    --sidebar-bg: var(--glass-bg-light, rgba(255, 255, 255, 0.65));
+    --chat-user-bg: var(--apple-blue, #0A84FF);
+    --chat-user-text: #ffffff;
     --chat-ai-bg: transparent;
-    --accent-color: #0062fa;
-    
+    --accent-color: var(--apple-blue, #0062fa);
+
     display: flex;
     flex-direction: column;
     height: calc(100vh - var(--toolbar-height) - 24px);
     position: absolute;
     top: calc(var(--toolbar-height) + 12px);
-    right: -400px; /* 隐藏位置 */
+    right: -400px;
+    /* 隐藏位置 */
     width: var(--sidebar-width);
     background: var(--sidebar-bg);
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    backdrop-filter: var(--glass-blur, blur(20px) saturate(160%));
+    -webkit-backdrop-filter: var(--glass-blur, blur(20px) saturate(160%));
+    border: 1px solid var(--glass-border-light, rgba(255, 255, 255, 0.5));
+    border-radius: 16px;
+    box-shadow: var(--glass-shadow, 0 8px 32px rgba(0, 0, 0, 0.12));
     z-index: 100;
     transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
@@ -33,7 +38,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .ai-header-title {
@@ -87,7 +92,7 @@
 }
 
 .ai-sidebar-close:hover {
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
     color: #333;
 }
 
@@ -113,7 +118,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .settings-header h3 {
@@ -140,7 +145,7 @@
 }
 
 .settings-close:hover {
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
     color: #333;
 }
 
@@ -306,9 +311,10 @@ body.custom-night-mode .settings-info {
 .user-msg {
     align-self: flex-end;
     background-color: var(--chat-user-bg);
-    padding: 8px 12px;
-    border-radius: 12px 12px 2px 12px;
-    color: #333;
+    padding: 10px 14px;
+    border-radius: 18px 18px 4px 18px;
+    color: var(--chat-user-text);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .ai-msg {
@@ -342,9 +348,17 @@ body.custom-night-mode .settings-info {
     line-height: 1.3;
 }
 
-.assistant-msg h1 { font-size: 1.5em; }
-.assistant-msg h2 { font-size: 1.3em; }
-.assistant-msg h3 { font-size: 1.1em; }
+.assistant-msg h1 {
+    font-size: 1.5em;
+}
+
+.assistant-msg h2 {
+    font-size: 1.3em;
+}
+
+.assistant-msg h3 {
+    font-size: 1.1em;
+}
 
 .assistant-msg p {
     margin: 8px 0;
@@ -421,7 +435,7 @@ body.custom-night-mode .settings-info {
 }
 
 /* 公式容器 */
-.assistant-msg .katex-display > .katex {
+.assistant-msg .katex-display>.katex {
     text-align: center;
     display: block;
     padding: 8px 0;
@@ -566,14 +580,18 @@ body.custom-night-mode .assistant-msg .katex-display::-webkit-scrollbar-thumb:ho
 }
 
 @keyframes thinking-blink {
-    0%, 20% {
+
+    0%,
+    20% {
         opacity: 0.3;
         transform: translateY(0);
     }
+
     50% {
         opacity: 1;
         transform: translateY(-10px);
     }
+
     100% {
         opacity: 0.3;
         transform: translateY(0);
@@ -589,10 +607,14 @@ body.custom-night-mode .assistant-msg .katex-display::-webkit-scrollbar-thumb:ho
 }
 
 @keyframes cursor-blink {
-    0%, 49% {
+
+    0%,
+    49% {
         opacity: 1;
     }
-    50%, 100% {
+
+    50%,
+    100% {
         opacity: 0;
     }
 }
@@ -601,23 +623,23 @@ body.custom-night-mode .assistant-msg .katex-display::-webkit-scrollbar-thumb:ho
 .ai-input-wrapper {
     padding: 16px;
     background: var(--sidebar-bg);
-    border-top: 1px solid rgba(0,0,0,0.05);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .ai-input-container {
     display: flex;
     align-items: flex-end;
-    background: #f9f9f9;
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 8px;
-    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--glass-border-light, rgba(255, 255, 255, 0.5));
+    border-radius: 20px;
+    padding: 8px 16px;
     gap: 8px;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, background 0.2s;
 }
 
 .ai-input-container:focus-within {
     border-color: var(--accent-color);
-    background: #fff;
+    background: var(--sidebar-bg);
 }
 
 #aiInput {
@@ -644,8 +666,14 @@ body.custom-night-mode .assistant-msg .katex-display::-webkit-scrollbar-thumb:ho
     transition: opacity 0.2s;
 }
 
-#aiSendBtn:hover { opacity: 1; }
-#aiSendBtn svg { width: 18px; height: 18px; }
+#aiSendBtn:hover {
+    opacity: 1;
+}
+
+#aiSendBtn svg {
+    width: 18px;
+    height: 18px;
+}
 
 .ai-input-footer {
     font-size: 10px;
@@ -658,10 +686,11 @@ body.custom-night-mode .assistant-msg .katex-display::-webkit-scrollbar-thumb:ho
 
 /* 深色模式适配 */
 body.custom-night-mode #aiSidebar {
-    --sidebar-bg: #1e1e1e;
-    --chat-user-bg: #333;
-    background: #1e1e1e;
-    border-color: #333;
+    --sidebar-bg: var(--glass-bg-dark, rgba(28, 28, 30, 0.65));
+    --chat-user-bg: var(--apple-blue, #0A84FF);
+    --chat-user-text: #fff;
+    background: var(--sidebar-bg);
+    border-color: var(--glass-border-dark, rgba(255, 255, 255, 0.1));
 }
 
 body.custom-night-mode .ai-header-title,
@@ -672,8 +701,8 @@ body.custom-night-mode .user-msg {
 }
 
 body.custom-night-mode .ai-input-container {
-    background: #2d2d2d;
-    border-color: #444;
+    background: rgba(0, 0, 0, 0.3);
+    border-color: var(--glass-border-dark, rgba(255, 255, 255, 0.1));
 }
 
 body.custom-night-mode #aiInput {
@@ -784,14 +813,17 @@ body.custom-night-mode #viewAI svg {
     --sidebar-width: 320px;
     position: absolute;
     top: calc(var(--toolbar-height) + 12px);
-    right: -500px; /* 初始隐藏在右侧 */
+    right: -500px;
+    /* 初始隐藏在右侧 */
     width: var(--sidebar-width);
     height: calc(100vh - var(--toolbar-height) - 24px);
-    z-index: 101; /* 确保在滚动条上方或作为独立层 */
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 12px;
+    z-index: 101;
+    /* 确保在滚动条上方或作为独立层 */
+    background: var(--sidebar-bg);
+    backdrop-filter: var(--glass-blur, blur(20px) saturate(160%));
+    -webkit-backdrop-filter: var(--glass-blur, blur(20px) saturate(160%));
+    border: 1px solid var(--glass-border-light, rgba(255, 255, 255, 0.5));
+    border-radius: 16px;
     transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
@@ -804,7 +836,8 @@ body.custom-night-mode #viewAI svg {
 
 /* 修复滚动条：PDF 容器永远占满宽度，但内容向内缩进 */
 #viewerContainer {
-    right: 0 !important; /* 强制设为0，滚动条就会贴在最右边 */
+    right: 0 !important;
+    /* 强制设为0，滚动条就会贴在最右边 */
     transition: padding-right 0.3s ease;
 }
 
@@ -822,7 +855,8 @@ body.custom-night-mode #viewAI svg {
 /* 拖拽条手感优化 */
 #aiSidebar .sidebarResizer {
     position: absolute;
-    left: -4px; /* 稍微往外扩一点，方便鼠标抓取 */
+    left: -4px;
+    /* 稍微往外扩一点，方便鼠标抓取 */
     top: 0;
     bottom: 0;
     width: 8px;
