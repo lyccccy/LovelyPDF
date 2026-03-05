@@ -1,4 +1,4 @@
-# Lovely PDF
+# 🧚Lovely PDF
 
 **[English](#english) | [中文](#中文)**
 
@@ -16,19 +16,19 @@ Next up, I want to let you select text directly in the paper and throw it into t
 
 ---
 
-## Eye Care — Before & After
+## 👁️ Eye Care — Before & After
 
-The original PDF viewer: pure white background, full brightness. Fine for a few minutes, brutal for an hour.
+😣 The original PDF viewer: pure white background, full brightness. Fine for a few minutes, brutal for an hour.
 
 ![Before](image/before.png)
 
-Switch on the eye-care theme and the whole page settles into something much easier to look at.
+😌 Switch on the eye-care theme and the whole page settles into something much easier to look at.
 
 ![After](image/after.png)
 
 ---
 
-## Customization
+## 🎨 Customization
 
 Beyond the presets, there's a full custom panel — adjust brightness, contrast, color inversion, and hue however you like. You can also set a background image to replace the plain white void behind the PDF.
 
@@ -38,7 +38,7 @@ Beyond the presets, there's a full custom panel — adjust brightness, contrast,
 
 ---
 
-## AI Assistant
+## 🤖 AI Assistant
 
 A sidebar chat that knows your paper. Ask it to summarize, explain a section, or answer a specific question — it reads the full PDF text as context. Streaming output, typewriter effect, Markdown and LaTeX math all render correctly.
 
@@ -46,9 +46,9 @@ A sidebar chat that knows your paper. Ask it to summarize, explain a section, or
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
-**1. Configure your API Key**
+**1. 🔑 Configure your API Key**
 
 ```bash
 cp pdfjs/web/config.example.js pdfjs/web/config.js
@@ -68,13 +68,13 @@ export const config = {
 };
 ```
 
-**2. Load the extension**
+**2. 🧩 Load the extension**
 
 1. Go to `chrome://extensions` in Chrome
 2. Enable **Developer mode** (top-right toggle)
 3. Click **Load unpacked** and select this project's root folder
 
-**3. Open any PDF**
+**3. 📄 Open any PDF**
 
 Any PDF link you open in Chrome will automatically be redirected to this viewer. Local files are supported too.
 
@@ -98,19 +98,19 @@ Any PDF link you open in Chrome will automatically be redirected to this viewer.
 
 ---
 
-## 护眼效果 — 前后对比
+## 👁️ 护眼效果 — 前后对比
 
-原始 PDF 阅览器：纯白背景，全亮度。看几分钟没事，看一个小时眼睛会很难受。
+😣 原始 PDF 阅览器：纯白背景，全亮度。看几分钟没事，看一个小时眼睛会很难受。
 
 ![Before](image/before.png)
 
-开启护眼主题后，整个页面变得柔和很多。
+😌 开启护眼主题后，整个页面变得柔和很多。
 
 ![After](image/after.png)
 
 ---
 
-## 自定义功能
+## 🎨 自定义功能
 
 除了预设模式，还有完整的自定义面板——亮度、对比度、反色、色相随意调节。也可以设置背景图片，替换掉 PDF 后面那片单调的白色。
 
@@ -120,7 +120,7 @@ Any PDF link you open in Chrome will automatically be redirected to this viewer.
 
 ---
 
-## AI 论文助手
+## 🤖 AI 论文助手
 
 一个了解你论文内容的侧边栏对话框。让它总结全文、解释某一段、或者回答具体问题——它会把 PDF 全文作为上下文。支持流式输出、打字机效果，Markdown 和 LaTeX 数学公式都能正确渲染。
 
@@ -128,9 +128,9 @@ Any PDF link you open in Chrome will automatically be redirected to this viewer.
 
 ---
 
-## 快速开始
+## 🚀 快速开始
 
-**1. 配置 API Key**
+**1. 🔑 配置 API Key**
 
 ```bash
 cp pdfjs/web/config.example.js pdfjs/web/config.js
@@ -150,13 +150,13 @@ export const config = {
 };
 ```
 
-**2. 加载扩展**
+**2. 🧩 加载扩展**
 
 1. 打开 Chrome，进入 `chrome://extensions`
 2. 开启右上角「开发者模式」
 3. 点击「加载已解压的扩展程序」，选择本项目根目录
 
-**3. 打开任意 PDF**
+**3. 📄 打开任意 PDF**
 
 在浏览器中打开任意 PDF 链接，扩展会自动接管。本地文件同样支持。
 
