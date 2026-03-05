@@ -16,6 +16,36 @@ Next up, I want to let you select text directly in the paper and throw it into t
 
 ---
 
+## Eye Care — Before & After
+
+The original PDF viewer: pure white background, full brightness. Fine for a few minutes, brutal for an hour.
+
+![Before](image/before.png)
+
+Switch on the eye-care theme and the whole page settles into something much easier to look at.
+
+![After](image/after.png)
+
+---
+
+## Customization
+
+Beyond the presets, there's a full custom panel — adjust brightness, contrast, color inversion, and hue however you like. You can also set a background image to replace the plain white void behind the PDF.
+
+![Customize](image/customize.png)
+
+![Customize 2](image/customize2.png)
+
+---
+
+## AI Assistant
+
+A sidebar chat that knows your paper. Ask it to summarize, explain a section, or answer a specific question — it reads the full PDF text as context. Streaming output, typewriter effect, Markdown and LaTeX math all render correctly.
+
+![AI Power](image/aipower.png)
+
+---
+
 ## Getting Started
 
 **1. Configure your API Key**
@@ -65,6 +95,36 @@ Any PDF link you open in Chrome will automatically be redirected to this viewer.
 做完这些，我想着反正我之前有调用 AI API 的经验，不如再加上论文总结和问答功能。有 AI 的帮助，这部分做起来比预想的快很多。最终做出了一个侧边栏对话界面——像 Cursor 那样——可以针对当前论文提问，支持流式输出和打字机效果，数学公式也能正确渲染。
 
 后续我打算让用户能够在论文里直接划选文字，一键丢进对话框，就像 Cursor 的 Add to Chat 一样。另外也想把整体界面做得更好看一些，往苹果那种风格靠——这也是我把这个仓库命名为 *lovely-pdf* 的原因。
+
+---
+
+## 护眼效果 — 前后对比
+
+原始 PDF 阅览器：纯白背景，全亮度。看几分钟没事，看一个小时眼睛会很难受。
+
+![Before](image/before.png)
+
+开启护眼主题后，整个页面变得柔和很多。
+
+![After](image/after.png)
+
+---
+
+## 自定义功能
+
+除了预设模式，还有完整的自定义面板——亮度、对比度、反色、色相随意调节。也可以设置背景图片，替换掉 PDF 后面那片单调的白色。
+
+![Customize](image/customize.png)
+
+![Customize 2](image/customize2.png)
+
+---
+
+## AI 论文助手
+
+一个了解你论文内容的侧边栏对话框。让它总结全文、解释某一段、或者回答具体问题——它会把 PDF 全文作为上下文。支持流式输出、打字机效果，Markdown 和 LaTeX 数学公式都能正确渲染。
+
+![AI Power](image/aipower.png)
 
 ---
 
