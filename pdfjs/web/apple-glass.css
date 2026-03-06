@@ -21,16 +21,20 @@
     /* System Font */
     --apple-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-    /* Fallback assignments for default viewer variables */
+    /* Fallback assignments for default PDF.js viewer variables */
     --toolbar-bg-color: var(--glass-bg-light) !important;
     --separator-color: var(--glass-border-light) !important;
     --doorhanger-bg-color: var(--glass-bg-light) !important;
+    --toolbar-icon-bg-color: var(--apple-text-light) !important;
+    --doorhanger-icon-bg-color: var(--apple-text-light) !important;
 }
 
 body.custom-night-mode {
     --toolbar-bg-color: var(--glass-bg-dark) !important;
     --separator-color: var(--glass-border-dark) !important;
     --doorhanger-bg-color: var(--glass-bg-dark) !important;
+    --toolbar-icon-bg-color: var(--apple-text-dark) !important;
+    --doorhanger-icon-bg-color: var(--apple-text-dark) !important;
 }
 
 /* Global Typography & Selection */
@@ -330,6 +334,29 @@ input.toolbarField:focus {
     height: calc(100vh - 70px) !important;
     border-radius: 0 16px 16px 0 !important;
     z-index: 9998 !important;
+
+    /* Override hidden="true" display:none to allow transitions */
+    display: block !important;
+
+    /* Slide animation */
+    transform: translateX(-100%) !important;
+    visibility: hidden !important;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.35s !important;
+}
+
+/* When open, slide the sidebar in */
+#outerContainer.viewsManagerOpen #viewsManager.sidebar {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+}
+
+/* Slide the main PDF container over so it's not obscured */
+#viewerContainer {
+    transition: left 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), padding-right 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+#outerContainer.viewsManagerOpen #viewerContainer:not(.pdfPresentationMode) {
+    left: var(--sidebar-width, 320px) !important;
 }
 
 body.custom-night-mode #viewsManager.sidebar {
