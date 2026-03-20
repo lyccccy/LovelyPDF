@@ -433,6 +433,17 @@ body.custom-night-mode .submenu hr {
     color: white !important;
 }
 
+/* Fix the square container behind the rounded dropdown */
+.dropdownToolbarButton {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.dropdownToolbarButton:hover {
+    background: transparent !important;
+}
+
 /* Dropdown selections (Scale zoom etc) */
 select.toolbarField,
 input.toolbarField,
