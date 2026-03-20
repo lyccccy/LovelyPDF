@@ -303,7 +303,20 @@ import { t } from './i18n.js';
     }
 
     function closeSidebar() {
-        document.getElementById('outerContainer').classList.remove('aiSidebarOpen');
+        const outerContainer = document.getElementById('outerContainer');
+        if (outerContainer.classList.contains('aiSidebarOpen')) {
+            outerContainer.classList.remove('aiSidebarOpen');
+            
+            // 恢复文档原来的位置
+            document.getElementById('viewerContainer').style.paddingRight = '0px';
+            
+            // 延时等待 CSS 过渡结束后重新计算 PDF 布局
+            setTimeout(() => {
+                if (window.PDFViewerApplication) {
+                    window.PDFViewerApplication.eventBus.dispatch('resize', { source: window });
+                }
+            }, 310);
+        }
     }
 
     function clearHistory() {
