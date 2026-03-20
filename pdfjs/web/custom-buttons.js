@@ -1,3 +1,5 @@
+import { t } from './i18n.js';
+
 // 夜间模式功能
 (function () {
   'use strict';
@@ -39,9 +41,12 @@
   }
 
   function initNightMode() {
-    console.log('初始化夜间模式...');
     const button = document.getElementById('customNightModeButton');
     if (!button) return;
+
+    // Apply translation to main button
+    button.title = t('night_mode_title');
+    button.setAttribute('aria-label', t('night_mode_title'));
 
     // 1. 注入菜单 HTML (注入到按钮的父容器中，而不是按钮内部)
     const wrapper = button.parentElement;
@@ -51,18 +56,18 @@
       <div id="nightModeMenu" class="night-mode-menu hidden">
         <div class="menu-item" data-type="invert">
           <span class="menu-icon">◑</span>
-          <span class="menu-text">高对比度</span>
+          <span class="menu-text">${t('high_contrast')}</span>
           <span class="menu-check" id="check-invert">✓</span>
         </div>
         <div class="menu-item" data-type="dim">
           <span class="menu-icon">👁️</span>
-          <span class="menu-text">护眼模式</span>
+          <span class="menu-text">${t('eye_care')}</span>
           <span class="menu-check" id="check-dim">✓</span>
         </div>
         <div class="menu-separator"></div>
         <div class="menu-item" id="openSettings">
           <span class="menu-icon">⚙️</span>
-          <span class="menu-text">自定义设置...</span>
+          <span class="menu-text">${t('custom_settings')}</span>
         </div>
       </div>
     `;
@@ -72,27 +77,27 @@
     const settingsHTML = `
       <div id="nightModeSettings" class="night-mode-settings hidden">
         <div class="settings-header">
-          <h3>夜间模式设置</h3>
+          <h3>${t('night_mode_settings')}</h3>
           <button id="closeSettings" class="close-btn">×</button>
         </div>
         <div class="settings-body">
           <div class="setting-row">
-            <label>反色 (Invert)</label>
+            <label>${t('invert')}</label>
             <input type="range" id="slider-invert" min="0" max="100" value="0">
             <span class="value" id="val-invert">0%</span>
           </div>
           <div class="setting-row">
-            <label>亮度 (Brightness)</label>
+            <label>${t('brightness')}</label>
             <input type="range" id="slider-brightness" min="50" max="150" value="100">
             <span class="value" id="val-brightness">100%</span>
           </div>
           <div class="setting-row">
-            <label>对比度 (Contrast)</label>
+            <label>${t('contrast')}</label>
             <input type="range" id="slider-contrast" min="50" max="150" value="100">
             <span class="value" id="val-contrast">100%</span>
           </div>
           <div class="setting-row">
-            <label>色相 (Hue)</label>
+            <label>${t('hue')}</label>
             <input type="range" id="slider-hue" min="0" max="360" value="0">
             <span class="value" id="val-hue">0°</span>
           </div>
@@ -100,28 +105,28 @@
           <div class="menu-separator" style="margin: 12px 0;"></div>
           
           <div class="setting-row">
-            <label style="width: auto; flex: 1;">启用背景图片</label>
+            <label style="width: auto; flex: 1;">${t('enable_bg_image')}</label>
             <input type="checkbox" id="check-enable-bg" style="flex: 0;">
           </div>
 
           <div id="bg-settings-container" class="hidden">
             <div class="setting-row full-width">
-              <label>背景图片 (URL/Path)</label>
+              <label>${t('bg_image_url')}</label>
               <div style="display: flex; gap: 8px; align-items: center;">
-                <input type="text" id="input-bg-image" placeholder="输入图片地址或选择文件" style="flex: 1;">
-                <button id="btn-browse-image" class="browse-btn" title="选择本地图片">📁</button>
+                <input type="text" id="input-bg-image" placeholder="${t('input_bg_placeholder')}" style="flex: 1;">
+                <button id="btn-browse-image" class="browse-btn" title="${t('select_local_image')}">📁</button>
               </div>
               <input type="file" id="file-bg-image" accept="image/*" style="display: none;">
             </div>
             <div class="setting-row">
-              <label>背景亮度 (Opacity)</label>
+              <label>${t('bg_opacity')}</label>
               <input type="range" id="slider-bg-opacity" min="0" max="100" value="50">
               <span class="value" id="val-bg-opacity">50%</span>
             </div>
           </div>
         </div>
         <div class="settings-footer">
-          <button id="resetSettings" class="reset-btn">重置</button>
+          <button id="resetSettings" class="reset-btn">${t('reset')}</button>
         </div>
       </div>
     `;
@@ -270,7 +275,7 @@
       
       // 检查是否是图片文件
       if (!file.type.startsWith('image/')) {
-        alert('⚠️ 请选择图片文件！');
+        alert(t('alert_need_image'));
         return;
       }
       

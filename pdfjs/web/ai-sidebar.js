@@ -1,5 +1,6 @@
 /* AI Chat Sidebar Logic */
 import { config } from './config.js';
+import { t } from './i18n.js';
 
 (function () {
     'use strict';
@@ -70,7 +71,7 @@ import { config } from './config.js';
         const aiButton = document.createElement('button');
         aiButton.id = 'viewAI';
         aiButton.className = 'toolbarButton';
-        aiButton.title = 'AI 助手';
+        aiButton.title = t('ai_assistant_title');
         aiButton.innerHTML = SPARKLE_ICON;
         aiButton.addEventListener('click', toggleSidebar);
         toolbarRight.prepend(aiButton);
@@ -83,10 +84,10 @@ import { config } from './config.js';
           <div id="aiSidebar">
             <div class="sidebarResizer" tabindex="0"></div>
             <div class="ai-sidebar-header">
-              <div class="ai-header-title">✨ AI Assistant</div>
+              <div class="ai-header-title">✨ ${t('ai_assistant_title')}</div>
               <div class="ai-header-actions">
-                <button class="ai-settings-btn" id="aiSettingsBtn" title="设置">⚙️</button>
-                <button class="ai-clear-btn" id="clearAIHistory" title="清除对话历史">🗑️</button>
+                <button class="ai-settings-btn" id="aiSettingsBtn" title="${t('settings')}">⚙️</button>
+                <button class="ai-clear-btn" id="clearAIHistory" title="${t('clear_history')}">🗑️</button>
                 <button class="ai-sidebar-close" id="closeAISidebar">×</button>
               </div>
             </div>
@@ -94,7 +95,7 @@ import { config } from './config.js';
             <!-- 设置面板 -->
             <div class="ai-settings-panel" id="aiSettingsPanel" style="display: none;">
               <div class="settings-header">
-                <h3>⚙️ API 设置</h3>
+                <h3>${t('api_settings')}</h3>
                 <button class="settings-close" id="closeSettings">×</button>
               </div>
               <div class="settings-content">
@@ -108,28 +109,28 @@ import { config } from './config.js';
                   <button class="toggle-password" id="togglePassword" type="button">👁️</button>
                 </div>
                 <div class="setting-item">
-                  <label for="apiModel">模型:</label>
+                  <label for="apiModel">${t('model')}</label>
                   <input type="text" id="apiModel" placeholder="gpt-3.5-turbo" />
                 </div>
                 <div class="settings-actions">
-                  <button class="btn-save" id="saveSettings">保存设置</button>
-                  <button class="btn-reset" id="resetSettings">恢复默认</button>
+                  <button class="btn-save" id="saveSettings">${t('save_settings')}</button>
+                  <button class="btn-reset" id="resetSettings">${t('restore_default')}</button>
                 </div>
                 <div class="settings-info">
-                  💡 设置会保存在本地，刷新页面后依然有效
+                  ${t('settings_saved_note')}
                 </div>
               </div>
             </div>
             
             <div class="ai-chat-container" id="aiChatContainer">
                 <div class="chat-message ai-msg">
-                    你好！我是你的 AI 助手，你可以问我关于这份 PDF 的任何问题。
+                    ${t('welcome_message')}
                 </div>
             </div>
 
             <div class="ai-input-wrapper">
               <div class="ai-input-container">
-                <textarea id="aiInput" placeholder="问问 AI..." rows="1"></textarea>
+                <textarea id="aiInput" placeholder="${t('ask_ai_placeholder')}" rows="1"></textarea>
                 <button id="aiSendBtn">
                     <svg viewBox="0 0 24 24"><path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                 </button>
@@ -271,7 +272,7 @@ import { config } from './config.js';
             // 显示欢迎消息
             const welcomeDiv = document.createElement('div');
             welcomeDiv.className = 'chat-message assistant-msg';
-            welcomeDiv.innerText = '你好！我是你的 AI 助手，你可以问我关于这份 PDF 的任何问题。';
+            welcomeDiv.innerText = t('welcome_message');
             container.appendChild(welcomeDiv);
         }
     }
@@ -315,7 +316,7 @@ import { config } from './config.js';
         }
         
         const container = document.getElementById('aiChatContainer');
-        container.innerHTML = '<div class="chat-message assistant-msg">对话历史已清除。你可以开始新的对话。</div>';
+        container.innerHTML = `<div class="chat-message assistant-msg">${t('clear_history_success')}</div>`;
         console.log('✅ 对话历史已清除');
     }
 
@@ -360,7 +361,7 @@ import { config } from './config.js';
         const model = document.getElementById('apiModel').value.trim();
         
         if (!baseUrl && !apiKey && !model) {
-            alert('⚠️ 请至少填写一项设置');
+            alert(t('alert_fill_one'));
             return;
         }
         
@@ -380,16 +381,16 @@ import { config } from './config.js';
             config.MODEL = settings.MODEL;
             
             console.log('✅ 设置已保存:', settings);
-            alert('✅ 设置已保存！');
+            alert(t('alert_save_success'));
             closeSettings();
         } catch (err) {
             console.error('❌ 保存设置失败:', err);
-            alert('❌ 保存设置失败：' + err.message);
+            alert(t('alert_save_failed') + err.message);
         }
     }
 
     function resetSettings() {
-        if (!confirm('确定要恢复默认设置吗？这将清除您保存的 API 配置。')) {
+        if (!confirm(t('confirm_restore_defaults'))) {
             return;
         }
         
@@ -403,7 +404,7 @@ import { config } from './config.js';
         document.getElementById('apiModel').value = '';
         
         console.log('✅ 已恢复默认设置');
-        alert('✅ 已恢复默认设置！刷新页面后生效。');
+        alert(t('alert_restore_success'));
     }
 
     function loadUserSettings() {
