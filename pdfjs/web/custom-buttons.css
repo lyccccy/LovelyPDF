@@ -557,29 +557,6 @@ body.custom-night-mode .menuContainer button:hover {
 }
 
 /* 编辑器工具栏和参数面板 - 柔和配色 */
-body.custom-night-mode .editorParamsToolbar {
-  background-color: #3a3a3a !important;
-  /* 从 #2a2a2a 调亮 */
-  color: #c0c0c0 !important;
-  /* 从 #e0e0e0 调暗 */
-  border-color: #4a4a4a !important;
-}
-
-body.custom-night-mode .editorParamsToolbarContainer {
-  background-color: #3a3a3a !important;
-  /* 从 #2a2a2a 调亮 */
-}
-
-/* 高亮工具相关 - 柔和配色 */
-body.custom-night-mode #editorHighlightParamsToolbar,
-body.custom-night-mode #editorFreeTextParamsToolbar,
-body.custom-night-mode #editorInkParamsToolbar,
-body.custom-night-mode #editorStampParamsToolbar {
-  background-color: #3a3a3a !important;
-  /* 从 #2a2a2a 调亮 */
-  border-color: #4a4a4a !important;
-}
-
 /* 所有编辑器参数标签 - 柔和文字 */
 body.custom-night-mode .editorParamsLabel {
   color: #c0c0c0 !important;
